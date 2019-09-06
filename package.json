@@ -1,0 +1,29 @@
+{
+  "name": "projeto_threejs",
+  "version": "1.0.0",
+  "description": "Projeto Three JS",
+  "main": "Teste.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IsmaelBPS/Projeto_ThreeJS.git"
+  },
+  "author": "Ismael",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IsmaelBPS/Projeto_ThreeJS/issues"
+  },
+  "homepage": "https://github.com/IsmaelBPS/Projeto_ThreeJS#readme",
+  "devDependencies": {
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "prettier": "^1.18.2",
+    "three": "^0.108.0"
+  },
+  "dependencies": {}
+}
