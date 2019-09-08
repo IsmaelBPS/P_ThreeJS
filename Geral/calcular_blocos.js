@@ -1,1 +1,0 @@
-function calcular_bloco() {}
