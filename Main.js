@@ -15,7 +15,7 @@ function init() {
     var cubo1 = gerar_cubo(cena, 2, 1, 1, 0xff0000, -3, 0.8, -0.5);
     var cubo2 = gerar_cubo(cena, 3, 2, 1, 0x00ff00, 0, 1.3, -0.5);
     var cubo3 = gerar_cubo(cena, 2, 1, 1, 0x0000ff, 3, 0.8, -0.5);
-    var longarina = gerar_longarina(cena, 0, 0, 0, 0xff4500, 0x00ffff, 0, 0, 0);
+    var longarina = gerar_longarina(cena, 0, 0, 0, 0xff4500, 0xcd853f, 0, 0, 0);
 
     var ambiente = Iluminação(cena);
 
@@ -161,7 +161,7 @@ function gerar_longarina(
         profundidade,
         cor_hexadecimal_horizontal,
         pos_x,
-        (pos_y = 4),
+        (pos_y = 4.2),
         (pos_z = -1.5)
     );
 
