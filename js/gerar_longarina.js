@@ -125,30 +125,6 @@ function gerar_longarina(
         pos_y - 9 * mult_altura,
         pos_z
     );
-    /*var vertical_tras_direita,
-        vertical_tras_esquerda,
-        vertical_frente_direita,
-        vertical_frente_esquerda;
-        var horizontal_baixo, horizontal_cima;
-
-    // Conferir já usados
-    var total_conferidos = 0;
-    conferir_cima = true;
-    total_conferidos++;
-    conferir_baixo = true;
-    total_conferidos++;
-    conferir_tras_direita = true;
-    total_conferidos++;
-    conferir_tras_esquerda = true;
-    total_conferidos++;
-    conferir_frente_direita = true;
-    total_conferidos++;
-    conferir_frente_esquerda = true;
-    total_conferidos++;
-
-    if (total_conferidos == 6) {
-    }
-    */
 }
 //ANCHOR Vertical
 function vertical(
@@ -192,6 +168,7 @@ function horizontal(
     pos_y = 0,
     pos_z = 0
 ) {
+    var profund = 3;
     var geometria_longarina_horizontal = new THREE.BoxGeometry(
         (largura = 10),
         (altura = 0.2),
@@ -214,42 +191,27 @@ function horizontal(
 }
 
 //ANCHOR Longarina_procedural
-/*function horizontal_total(cena, quantidade, posição_y = 0, posição_z = 0) {
-    var i = 0;
-    var posição_x = 0;
-    var espaçamento_horizontal = 10;
-
-    while (i < quantidade) {
-        gerar_longarina(
-            cena,
-            0,
-            0,
-            0,
-            0xff4500,
-            0x8b4513,
-            posição_x,
-            posição_y,
-            posição_z
-        );
-        posição_x += espaçamento_horizontal;
-
-        i++;
-    }
-}*/
 
 function gerar_longarina_total(
     cena,
     quantidade,
     horizontal,
+    corredor = 0,
     posição_x = 0,
-    posição_y = 0,
-    posição_z = 0
+    posição_y = 0
 ) {
+    var profundidade_padrão = -6;
+
     var repetir = 0;
     var espaçamento_vertical = 4;
     var espaçamento_horizontal = 10;
+    if (corredor > 0) {
+        //         QNT.corredores * 3(profundidade)
+        corredor = corredor * 3 * profundidade_padrão;
+    }
+
     for (repetir = 0; repetir < horizontal; repetir++) {
-        var pos_z_2 = posição_z - 3.5;
+        var pos_z_2 = corredor - 3.5;
         var i = 0;
         while (i < quantidade) {
             gerar_longarina(
@@ -262,7 +224,7 @@ function gerar_longarina_total(
                 0x8b4513,
                 posição_x,
                 posição_y,
-                posição_z
+                corredor
             );
             gerar_longarina(
                 //2
@@ -283,6 +245,7 @@ function gerar_longarina_total(
         posição_y = 0;
         posição_x += espaçamento_horizontal;
     }
+    //var corredor = -(3 * profundidade_padrão);
 }
 
 export { gerar_longarina, gerar_longarina_total };
