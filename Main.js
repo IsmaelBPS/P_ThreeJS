@@ -1,6 +1,6 @@
 import * as THREE from "./three.js-master/build/three.module.js";
 import { MapControls } from "./three.js-master/examples/jsm/controls/OrbitControls.js";
-import * as longarina from "./js/gerar_longarina";
+import * as rua from "./js/gerar_longarina";
 //var longarina = require("./js/gerar_longarina");
 
 //ANCHOR  Init
@@ -10,7 +10,7 @@ function init() {
     //Cena
     var cena = new THREE.Scene();
     //Cor de fundo
-    cena.background = new THREE.Color(0xd3d3d3);
+    cena.background = new THREE.Color(0x000000);
     //Tipo de renderizador
     var renderizar = new THREE.WebGLRenderer({
         antialias: true
@@ -38,28 +38,37 @@ function init() {
     // Por Prompt
     var r = 0;
     while (r < 1) {
-        var qnt = prompt("Quantas longarinas gerar ? ");
+        var qnt = prompt("Quantas ruas gerar ? ");
         for (var i = 0; i < qnt; i++) {
-            var altura_longarina = prompt("Altura : ");
-            var comprimento_longarina = prompt("Comprimento : ");
-            var corredor = prompt("Corredor : ");
+            var altura_rua = prompt("Níveis da rua " + i + " : ");
+            var comprimento_rua = prompt("Prédio(s) da rua " + i + " : ");
 
-            var long = longarina.gerar_longarina_total(
+            /* if (i == 0 || i == qnt) {
+                var rua_pontas = rua.gerar_rua_unica(
+                    cena,
+                    altura_rua,
+                    comprimento_rua,
+                    0,
+                    10,
+                    15
+                );}
+                */
+            var long = rua.gerar_rua_dupla(
                 cena,
-                altura_longarina,
-                comprimento_longarina,
-                corredor
+                altura_rua,
+                comprimento_rua,
+                i
             );
         }
         r = 1;
     }
 
     //Manualmente
-    /*var long_1 = longarina.gerar_longarina_total(cena, 4, 5, 0);
-    var long_2 = longarina.gerar_longarina_total(cena, 4, 8, 1);
-    var long_3 = longarina.gerar_longarina_total(cena, 4, 6, 2);
-    var long_4 = longarina.gerar_longarina_total(cena, 4, 5, 3);
-    var long_5 = longarina.gerar_longarina_total(cena, 4, 4, 4);
+    /*var long_1 = rua.gerar_longarina_total(cena, 4, 5, 0);
+    var long_2 = rua.gerar_longarina_total(cena, 4, 8, 1);
+    var long_3 = rua.gerar_longarina_total(cena, 4, 6, 2);
+    var long_4 = rua.gerar_longarina_total(cena, 4, 5, 3);
+    var long_5 = rua.gerar_longarina_total(cena, 4, 4, 4);
     */
 
     // Loop de renderização
