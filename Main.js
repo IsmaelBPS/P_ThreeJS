@@ -33,12 +33,34 @@ function init() {
     cena.add(piso);
 
     //ANCHOR  Gerar longarinas
-    // (altura, largura , corredor)
-    var long_1 = longarina.gerar_longarina_total(cena, 4, 5, 0);
+    // (cena aonde será renderizado , altura, largura , corredor)
+
+    // Por Prompt
+    var r = 0;
+    while (r < 1) {
+        var qnt = prompt("Quantas longarinas gerar ? ");
+        for (var i = 0; i < qnt; i++) {
+            var altura_longarina = prompt("Altura : ");
+            var comprimento_longarina = prompt("Comprimento : ");
+            var corredor = prompt("Corredor : ");
+
+            var long = longarina.gerar_longarina_total(
+                cena,
+                altura_longarina,
+                comprimento_longarina,
+                corredor
+            );
+        }
+        r = 1;
+    }
+
+    //Manualmente
+    /*var long_1 = longarina.gerar_longarina_total(cena, 4, 5, 0);
     var long_2 = longarina.gerar_longarina_total(cena, 4, 8, 1);
     var long_3 = longarina.gerar_longarina_total(cena, 4, 6, 2);
     var long_4 = longarina.gerar_longarina_total(cena, 4, 5, 3);
     var long_5 = longarina.gerar_longarina_total(cena, 4, 4, 4);
+    */
 
     // Loop de renderização
     function animate() {

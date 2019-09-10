@@ -20,6 +20,7 @@ function gerar_longarina(
         conferir_tras_direita;
 
     var conferir_baixo, conferir_cima;
+
     //Frente
 
     vertical(
@@ -95,6 +96,7 @@ function gerar_longarina(
     // Gerar Caixas
     var mult_largura = 3;
     var mult_altura = 0.245;
+
     var cubo1 = gerar_cubo(
         cena,
         2,
@@ -200,7 +202,7 @@ function gerar_longarina_total(
     posição_x = 0,
     posição_y = 0
 ) {
-    var profundidade_padrão = -6;
+    var profundidade_padrão = -8;
 
     var repetir = 0;
     var espaçamento_vertical = 4;
@@ -211,7 +213,7 @@ function gerar_longarina_total(
     }
 
     for (repetir = 0; repetir < horizontal; repetir++) {
-        var pos_z_2 = corredor - 3.5;
+        var pos_z_2 = corredor - 3.2;
         var i = 0;
         while (i < quantidade) {
             gerar_longarina(
