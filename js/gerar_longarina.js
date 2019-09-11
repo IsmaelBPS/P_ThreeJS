@@ -14,6 +14,15 @@ function gerar_rua(
     pos_y = 0,
     pos_z = 0
 ) {
+    function resetar_posX() {
+        return (pos_x = 0);
+    }
+    function resetar_posZ() {
+        return (pos_z = 0);
+    }
+    function resetar_posY() {
+        return (pos_y = 0);
+    }
     // Verificar quais posições já foram usadas
     /*var conferir_frente_esquerda,
         conferir_frente_direita,
@@ -27,22 +36,22 @@ function gerar_rua(
     vertical(
         //Esquerda
         cena,
-        largura,
-        altura,
-        profundidade,
+        0.1,
+        4.5,
+        0.1,
         cor_hexadecimal_vertical,
-        (pos_x = pos_x - 5), //pos_x = -5
+        (pos_x = pos_x - 5),
         (pos_y = pos_y),
         pos_z
     );
     vertical(
         //Direita
         cena,
-        largura,
-        altura,
-        profundidade,
+        0.1,
+        4.5,
+        0.1,
         cor_hexadecimal_vertical,
-        (pos_x = pos_x + 10), //pos_x = 5
+        (pos_x = pos_x + 10),
         (pos_y = pos_y),
         pos_z
     );
@@ -51,22 +60,22 @@ function gerar_rua(
     vertical(
         //Esquerda
         cena,
-        largura,
-        altura,
-        profundidade,
+        0.1,
+        4.5,
+        0.1,
         cor_hexadecimal_vertical,
-        (pos_x = pos_x - 10), //pos_x = -5
+        (pos_x = pos_x - 10),
         (pos_y = pos_y),
         (pos_z = pos_z - 3)
     );
     vertical(
         //Direita
         cena,
-        largura,
-        altura,
-        profundidade,
+        0.1,
+        4.5,
+        0.1,
         cor_hexadecimal_vertical,
-        (pos_x = pos_x + 10), //pos_x = 5
+        (pos_x = pos_x + 10),
         (pos_y = pos_y),
         (pos_z = pos_z)
     );
@@ -131,6 +140,7 @@ function gerar_rua(
     );
 }
 //ANCHOR Vertical
+
 function vertical(
     cena,
     largura,
@@ -142,9 +152,9 @@ function vertical(
     pos_z = 0
 ) {
     var geometria_rua_vertical = new THREE.BoxGeometry(
-        (largura = 0.1),
-        (altura = 4.5),
-        (profundidade = 0.1)
+        largura,
+        altura,
+        profundidade
     );
     var material_rua_vertical = new THREE.MeshBasicMaterial({
         color: cor_hexadecimal
@@ -156,10 +166,45 @@ function vertical(
     );
 
     rua_vertical.position.x = pos_x;
-    rua_vertical.position.y = pos_y + 2;
+    rua_vertical.position.y = pos_y + altura / 2;
     rua_vertical.position.z = pos_z;
 
     return cena.add(rua_vertical);
+}
+
+//ANCHOR Vertical Proteção
+function vertical_protecao(
+    cena,
+    largura,
+    altura,
+    profundidade,
+    cor_hexadecimal,
+    pos_x = 0,
+    pos_y = 0,
+    pos_z = 0,
+    angulo = -45
+) {
+    var geometria_protecao_vertical = new THREE.BoxGeometry(
+        largura,
+        altura / 2,
+        profundidade
+    );
+    var material_protecao_vertical = new THREE.MeshBasicMaterial({
+        color: cor_hexadecimal
+    });
+
+    var protecao_vertical = new THREE.Mesh(
+        geometria_protecao_vertical,
+        material_protecao_vertical
+    );
+
+    protecao_vertical.position.x = pos_x;
+    protecao_vertical.position.y = pos_y + 2;
+    protecao_vertical.position.z = pos_z;
+
+    protecao_vertical.rotateZ(45);
+
+    return cena.add(protecao_vertical);
 }
 //ANCHOR horizontal
 function horizontal(
@@ -197,6 +242,8 @@ function horizontal(
 //ANCHOR Rua procedural
 //ANCHOR Rua Dupla
 var corredor = 0;
+var espaçamento_vertical = 4;
+var espaçamento_horizontal = 10;
 function gerar_rua_dupla(
     cena,
     quantidade,
@@ -255,21 +302,33 @@ function gerar_rua_dupla(
     //var corredor = -(3 * profundidade_padrão);
 }
 //ANCHOR Rua Única
-function gerar_rua_unica(cena, comprimento, altura, pos_x, pos_y, pos_z) {
-    var i = 0;
-    while (i < comprimento) {
-        gerar_rua(
-            cena,
-            comprimento,
-            altura,
-            0,
-            0xff4500,
-            0x8b4513,
-            pos_x,
-            pos_y,
-            pos_z
-        );
-        i++;
+function gerar_rua_unica(
+    cena,
+    comprimento,
+    altura,
+    posição_x,
+    posição_y,
+    posição_z
+) {
+    for (var repetir = 0; repetir < comprimento; repetir++) {
+        var i = 0;
+        while (i < altura) {
+            gerar_rua(
+                cena,
+                0,
+                0,
+                0,
+                0xff4500,
+                0x8b4513,
+                posição_x,
+                posição_y,
+                posição_z
+            );
+            posição_y += espaçamento_vertical;
+            i++;
+        }
+        posição_y = 0;
+        posição_x += espaçamento_horizontal;
     }
 }
 

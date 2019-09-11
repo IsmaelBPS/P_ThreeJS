@@ -37,20 +37,22 @@ function init() {
     var profundidade_do_piso = largura_rua;
     var comprimento_do_piso = 10.2;
 
+    var galpao = Array();
     while (r < 1) {
         var qnt = prompt("Quantas ruas gerar ? ");
         var profpiso = profundidade_do_piso * qnt + 15.5;
+
         for (var i = 0; i < qnt; i++) {
             var altura_rua = prompt("Níveis da rua " + (i + 1) + " : ");
             var comprimento_rua = prompt("Prédio(s) da rua " + (i + 1) + " : ");
             var compiso = comprimento_do_piso * comprimento_rua + 10;
-            Piso.p(qnt);
+            Piso.p(qnt, comprimento_rua);
             piso(Piso.comprimento_piso, Piso.profundidade_piso);
             if (i == 0) {
                 var n = rua.gerar_rua_unica(
                     cena,
-                    3, //comprimento_rua,
-                    4, //altura_rua,
+                    comprimento_rua, //comprimento_rua,
+                    altura_rua, //altura_rua,
                     0,
                     0,
                     12
@@ -59,14 +61,15 @@ function init() {
             } else if (i == qnt - 1) {
                 var n = rua.gerar_rua_unica(
                     cena,
-                    3, //comprimento_rua,
-                    4, //altura_rua,
+                    comprimento_rua, //comprimento_rua,
+                    altura_rua, //altura_rua,
                     0,
                     0,
                     -Piso.profundidade_piso + largura_rua
                     //-Piso.profundidade_piso + 15 + 1
                 );
             }
+
             var r = rua.gerar_rua_dupla(cena, altura_rua, comprimento_rua, i);
         }
         r = 1;
@@ -81,8 +84,8 @@ function init() {
         var textura_piso = new THREE.TextureLoader().load("./Imagens/piso.jpg");
         var piso_material = new THREE.MeshBasicMaterial({ map: textura_piso });
         var piso = new THREE.Mesh(piso_geometria, piso_material);
-        piso.position.x = comprimento_piso / 2 - 5 - 1; // 110;
-        piso.position.z = -(profundidade_piso / 2) + 12.5; // -110;
+        piso.position.x = comprimento_piso / 2 - 6; // 110;
+        piso.position.z = -(profundidade_piso / 2) + 12.2; // -110;
         //piso.rotateX(-Math.PI / 2);
         cena.add(piso);
     }
