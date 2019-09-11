@@ -40,10 +40,68 @@ function gerar_rua(
         4.5,
         0.1,
         cor_hexadecimal_vertical,
-        (pos_x = pos_x - 5),
-        (pos_y = pos_y),
+        (pos_x = pos_x - 5), // -5
+        pos_y, // = pos_y,
         pos_z
     );
+
+    // ANCHOR  Proteções
+    var largura_base = 3;
+    var largura_total = 3.2;
+    var altura_do_chão = 0.2;
+    var alt = 4.5;
+    var tamanho_diagonal_DS = Math.sqrt(
+        Math.pow(alt / 2, 2) + Math.pow(largura_total, 2)
+    );
+    var altura_longarina = 4;
+    // Proteção vertical esquerda
+    vertical_protecao(
+        cena,
+        0.01,
+        7.85,
+        0.1,
+        cor_hexadecimal_vertical,
+        pos_x,
+        pos_y - 0.65,
+        pos_z - 1.48,
+        -0.872665
+    );
+    vertical_protecao(
+        cena,
+        0.01,
+        7,
+        0.1,
+        cor_hexadecimal_vertical,
+        pos_x,
+        pos_y + 1.4,
+        pos_z - 1.51,
+        1.0472
+    );
+    //
+    //Proteção Vertical Direita
+    vertical_protecao(
+        cena,
+        0.01,
+        7.85,
+        0.1,
+        cor_hexadecimal_vertical,
+        pos_x + 10,
+        pos_y - 0.65,
+        pos_z - 1.48,
+        -0.872665
+    );
+    vertical_protecao(
+        cena,
+        0.01,
+        7,
+        0.1,
+        cor_hexadecimal_vertical,
+        pos_x + 10,
+        pos_y + 1.4,
+        pos_z - 1.51,
+        1.0472
+    );
+
     vertical(
         //Direita
         cena,
@@ -51,7 +109,7 @@ function gerar_rua(
         4.5,
         0.1,
         cor_hexadecimal_vertical,
-        (pos_x = pos_x + 10),
+        (pos_x = pos_x + 10), // 5
         (pos_y = pos_y),
         pos_z
     );
@@ -64,7 +122,7 @@ function gerar_rua(
         4.5,
         0.1,
         cor_hexadecimal_vertical,
-        (pos_x = pos_x - 10),
+        (pos_x = pos_x - 10), // -5
         (pos_y = pos_y),
         (pos_z = pos_z - 3)
     );
@@ -75,7 +133,7 @@ function gerar_rua(
         4.5,
         0.1,
         cor_hexadecimal_vertical,
-        (pos_x = pos_x + 10),
+        (pos_x = pos_x + 10), // 5
         (pos_y = pos_y),
         (pos_z = pos_z)
     );
@@ -87,8 +145,8 @@ function gerar_rua(
         altura,
         profundidade,
         cor_hexadecimal_horizontal,
-        (pos_x = pos_x - 5),
-        (pos_y = pos_y + 0.2),
+        (pos_x = pos_x - 5), // 0
+        (pos_y = pos_y + altura_do_chão), //0 .2
         (pos_z = pos_z + 1.5)
     );
     // Cima
@@ -98,15 +156,32 @@ function gerar_rua(
         altura,
         profundidade,
         cor_hexadecimal_horizontal,
-        (pos_x = pos_x),
-        (pos_y = pos_y + 3.8),
+        (pos_x = pos_x), // 0
+        (pos_y = pos_y + altura_longarina), //4.2
         (pos_z = pos_z)
     );
 
-    // Gerar Caixas
+    // ANCHOR  Gerar Caixas
     var mult_largura = 3;
     var mult_altura = 0.245;
-    var altura_do_chão = 0.2;
+    var posição_y = 0.2;
+
+    var c1_x, c1_y, c1_z;
+    c1_x = 2;
+    c1_y = 1;
+    c1_z = 3;
+    /*
+    var cubo1 = gerar_cubo(
+        cena,
+        c1_x,
+        c1_y,
+        c1_z,
+        0xff0000,
+        pos_x - mult_largura,
+        posição_y + c1_y / 2 + 0.2, //pos_y - 13 * mult_altura,
+        pos_z
+    );
+    */
 
     var cubo1 = gerar_cubo(
         cena,
@@ -118,6 +193,7 @@ function gerar_rua(
         pos_y - 13 * mult_altura,
         pos_z
     );
+
     var cubo2 = gerar_cubo(
         cena,
         3,
@@ -138,6 +214,8 @@ function gerar_rua(
         pos_y - 9 * mult_altura,
         pos_z
     );
+
+    posição_y += altura_longarina;
 }
 //ANCHOR Vertical
 
@@ -182,7 +260,7 @@ function vertical_protecao(
     pos_x = 0,
     pos_y = 0,
     pos_z = 0,
-    angulo = -45
+    angulo
 ) {
     var geometria_protecao_vertical = new THREE.BoxGeometry(
         largura,
@@ -202,7 +280,7 @@ function vertical_protecao(
     protecao_vertical.position.y = pos_y + 2;
     protecao_vertical.position.z = pos_z;
 
-    protecao_vertical.rotateZ(45);
+    protecao_vertical.rotateX(angulo);
 
     return cena.add(protecao_vertical);
 }

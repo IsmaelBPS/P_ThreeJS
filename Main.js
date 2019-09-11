@@ -46,6 +46,7 @@ function init() {
             var altura_rua = prompt("Níveis da rua " + (i + 1) + " : ");
             var comprimento_rua = prompt("Prédio(s) da rua " + (i + 1) + " : ");
             var compiso = comprimento_do_piso * comprimento_rua + 10;
+            // Sempre gera o piso a cada for, ficando sobreposto sempre o maior
             Piso.p(qnt, comprimento_rua);
             piso(Piso.comprimento_piso, Piso.profundidade_piso);
             if (i == 0) {
