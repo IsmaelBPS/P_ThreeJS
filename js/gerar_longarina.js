@@ -1,5 +1,6 @@
 import * as THREE from "../three.js-master/build/three.module";
 import { gerar_cubo } from "./gerar_cubo";
+import * as piso from "./ambiente/Piso";
 
 //ANCHOR  Gerar_rua
 function gerar_rua(
@@ -142,7 +143,7 @@ function vertical(
 ) {
     var geometria_rua_vertical = new THREE.BoxGeometry(
         (largura = 0.1),
-        (altura = 5),
+        (altura = 4.5),
         (profundidade = 0.1)
     );
     var material_rua_vertical = new THREE.MeshBasicMaterial({
@@ -155,7 +156,7 @@ function vertical(
     );
 
     rua_vertical.position.x = pos_x;
-    rua_vertical.position.y = pos_y + 2.5;
+    rua_vertical.position.y = pos_y + 2;
     rua_vertical.position.z = pos_z;
 
     return cena.add(rua_vertical);
@@ -193,12 +194,14 @@ function horizontal(
     return cena.add(rua_horizontal);
 }
 
-//ANCHOR Longarina_procedural
+//ANCHOR Rua procedural
+//ANCHOR Rua Dupla
+var corredor = 0;
 function gerar_rua_dupla(
     cena,
     quantidade,
     horizontal,
-    corredor = 0,
+    corredor,
     posição_x = 0,
     posição_y = 0
 ) {
@@ -207,6 +210,7 @@ function gerar_rua_dupla(
     var repetir = 0;
     var espaçamento_vertical = 4;
     var espaçamento_horizontal = 10;
+
     if (corredor > 0) {
         //         QNT.corredores * 3(profundidade)
         corredor = corredor * 3 * profundidade_padrão;
@@ -215,6 +219,7 @@ function gerar_rua_dupla(
     for (repetir = 0; repetir < horizontal; repetir++) {
         var pos_z_2 = corredor - 3.2;
         var i = 0;
+
         while (i < quantidade) {
             gerar_rua(
                 //1
@@ -249,10 +254,10 @@ function gerar_rua_dupla(
     }
     //var corredor = -(3 * profundidade_padrão);
 }
-
-function gerar_rua_unica(cena, altura, comprimento, pos_x, pos_y, pos_z) {
+//ANCHOR Rua Única
+function gerar_rua_unica(cena, comprimento, altura, pos_x, pos_y, pos_z) {
     var i = 0;
-    while (i < 0) {
+    while (i < comprimento) {
         gerar_rua(
             cena,
             comprimento,
@@ -264,9 +269,7 @@ function gerar_rua_unica(cena, altura, comprimento, pos_x, pos_y, pos_z) {
             pos_y,
             pos_z
         );
-        if (i == comprimento) {
-            i = 1;
-        }
+        i++;
     }
 }
 

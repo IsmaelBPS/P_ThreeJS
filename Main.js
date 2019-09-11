@@ -1,11 +1,14 @@
 import * as THREE from "./three.js-master/build/three.module.js";
 import { MapControls } from "./three.js-master/examples/jsm/controls/OrbitControls.js";
 import * as rua from "./js/gerar_longarina";
+import * as Piso from "./js/ambiente/Piso";
 //var longarina = require("./js/gerar_longarina");
 
 //ANCHOR  Init
 init();
-
+/*var largura_piso = 250,
+    profundidade_piso = 250;
+*/
 function init() {
     //Cena
     var cena = new THREE.Scene();
@@ -23,46 +26,66 @@ function init() {
     //document.body.appendChild(renderizar.domElement);
     //Gerar elementos
     //Piso
-    var piso_geometria = new THREE.BoxGeometry(250, 0.001, 250);
-    var textura_piso = new THREE.TextureLoader().load("./Imagens/piso.jpg");
-    var piso_material = new THREE.MeshBasicMaterial({ map: textura_piso });
-    var piso = new THREE.Mesh(piso_geometria, piso_material);
-    piso.position.x = 110;
-    piso.position.z = -110;
-    //piso.rotateX(-Math.PI / 2);
-    cena.add(piso);
+    // Parâmetros em js/Ambiente
 
     //ANCHOR  Gerar longarinas
     // (cena aonde será renderizado , altura, largura , corredor)
-
     // Por Prompt
     var r = 0;
+    var lr = 6.2;
+    var largura_rua = lr + 3 * (lr / 2);
+    var profundidade_do_piso = largura_rua;
+    var comprimento_do_piso = 10.2;
+
     while (r < 1) {
         var qnt = prompt("Quantas ruas gerar ? ");
+        var profpiso = profundidade_do_piso * qnt + 15.5;
         for (var i = 0; i < qnt; i++) {
-            var altura_rua = prompt("Níveis da rua " + i + " : ");
-            var comprimento_rua = prompt("Prédio(s) da rua " + i + " : ");
-
-            /* if (i == 0 || i == qnt) {
-                var rua_pontas = rua.gerar_rua_unica(
+            var altura_rua = prompt("Níveis da rua " + (i + 1) + " : ");
+            var comprimento_rua = prompt("Prédio(s) da rua " + (i + 1) + " : ");
+            var compiso = comprimento_do_piso * comprimento_rua + 10;
+            Piso.p(qnt);
+            piso(Piso.comprimento_piso, Piso.profundidade_piso);
+            if (i == 0) {
+                var n = rua.gerar_rua_unica(
                     cena,
-                    altura_rua,
-                    comprimento_rua,
+                    3, //comprimento_rua,
+                    4, //altura_rua,
                     0,
-                    10,
-                    15
-                );}
-                */
-            var long = rua.gerar_rua_dupla(
-                cena,
-                altura_rua,
-                comprimento_rua,
-                i
-            );
+                    0,
+                    12
+                    //Piso.profundidade_piso - Piso.profundidade_piso + 12
+                );
+            } else if (i == qnt - 1) {
+                var n = rua.gerar_rua_unica(
+                    cena,
+                    3, //comprimento_rua,
+                    4, //altura_rua,
+                    0,
+                    0,
+                    -Piso.profundidade_piso + largura_rua
+                    //-Piso.profundidade_piso + 15 + 1
+                );
+            }
+            var r = rua.gerar_rua_dupla(cena, altura_rua, comprimento_rua, i);
         }
         r = 1;
     }
-
+    function piso(comprimento_piso, profundidade_piso) {
+        //Piso
+        var piso_geometria = new THREE.BoxGeometry(
+            comprimento_piso,
+            0.001,
+            profundidade_piso
+        );
+        var textura_piso = new THREE.TextureLoader().load("./Imagens/piso.jpg");
+        var piso_material = new THREE.MeshBasicMaterial({ map: textura_piso });
+        var piso = new THREE.Mesh(piso_geometria, piso_material);
+        piso.position.x = comprimento_piso / 2 - 5 - 1; // 110;
+        piso.position.z = -(profundidade_piso / 2) + 12.5; // -110;
+        //piso.rotateX(-Math.PI / 2);
+        cena.add(piso);
+    }
     //Manualmente
     /*var long_1 = rua.gerar_longarina_total(cena, 4, 5, 0);
     var long_2 = rua.gerar_longarina_total(cena, 4, 8, 1);
@@ -105,7 +128,7 @@ function controles(camera, render) {
     // MapControls : Usa a câmera com o mouse, (camera, onde irá renderizar)
     var camControles = new MapControls(camera, render.domElement);
     camControles.minDistance = 10;
-    camControles.maxDistance = 500;
+    camControles.maxDistance = 50;
     // Ângulo máximo de rotação da image, PI = 180°
     camControles.maxPolarAngle = Math.PI / 2.2; //Math.PI / 2;
 
