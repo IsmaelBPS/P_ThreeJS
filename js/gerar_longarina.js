@@ -160,29 +160,47 @@ function gerar_rua(
         (pos_y = pos_y + altura_longarina), //4.2
         (pos_z = pos_z)
     );
-
     // ANCHOR  Gerar Caixas
-    var mult_largura = 3;
-    var mult_altura = 0.245;
-    var posição_y = 0.2;
+    var qnt_cubos = 3;
+    gerar_caixas();
+    function gerar_caixas() {
+        var mult_largura = 3;
+        var mult_altura = 0.245;
+        var posição_y = 0.2;
 
-    var c1_x, c1_y, c1_z;
-    c1_x = 2;
-    c1_y = 1;
-    c1_z = 3;
-    /*
-    var cubo1 = gerar_cubo(
-        cena,
-        c1_x,
-        c1_y,
-        c1_z,
-        0xff0000,
-        pos_x - mult_largura,
-        posição_y + c1_y / 2 + 0.2, //pos_y - 13 * mult_altura,
-        pos_z
-    );
-    */
+        var c1_x, c1_y, c1_z;
+        c1_x = 2;
+        c1_y = 1;
+        c1_z = 3;
+        // Relativo
+        for (var i = 0; i < qnt_cubos; i++) {
+            var cubo1 = gerar_cubo(
+                cena,
+                c1_x,
+                c1_y,
+                c1_z,
+                0xff0000,
+                pos_x - mult_largura,
+                posição_y + c1_y / 2 + 0.1, //pos_y - 13 * mult_altura,
+                pos_z
+            );
+            posição_y += altura_longarina;
+        }
+        /*
+        var cubo1 = gerar_cubo(
+            cena,
+            c1_x,
+            c1_y,
+            c1_z,
+            0xff0000,
+            pos_x - mult_largura,
+            pos_y + c1_y / 2 + 0.2, //pos_y - 13 * mult_altura,
+            pos_z
+        );
+        */
 
+        // Absoluto
+        /* 
     var cubo1 = gerar_cubo(
         cena,
         2,
@@ -193,29 +211,31 @@ function gerar_rua(
         pos_y - 13 * mult_altura,
         pos_z
     );
+    */
 
-    var cubo2 = gerar_cubo(
-        cena,
-        3,
-        2,
-        3,
-        0x00ff00,
-        pos_x,
-        pos_y - 11 * mult_altura,
-        pos_z
-    );
-    var cubo3 = gerar_cubo(
-        cena,
-        2,
-        3,
-        3,
-        0x0000ff,
-        pos_x + mult_largura,
-        pos_y - 9 * mult_altura,
-        pos_z
-    );
+        var cubo2 = gerar_cubo(
+            cena,
+            3,
+            2,
+            3,
+            0x00ff00,
+            pos_x,
+            pos_y - 11 * mult_altura,
+            pos_z
+        );
+        var cubo3 = gerar_cubo(
+            cena,
+            2,
+            3,
+            3,
+            0x0000ff,
+            pos_x + mult_largura,
+            pos_y - 9 * mult_altura,
+            pos_z
+        );
 
-    posição_y += altura_longarina;
+        //posição_y += altura_longarina;
+    }
 }
 //ANCHOR Vertical
 
