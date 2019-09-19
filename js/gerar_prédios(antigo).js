@@ -1,9 +1,8 @@
 import * as THREE from "../three.js-master/build/three.module";
 import { gerar_cubo } from "./gerar_cubo";
-import * as piso from "./ambiente/Piso";
 
 //ANCHOR  Gerar_rua
-function gerar_rua(
+function gerar_longarina(
     cena,
     largura,
     altura,
@@ -46,10 +45,11 @@ function gerar_rua(
     );
 
     // ANCHOR  Proteções
+
     var largura_base = 3;
-    var largura_total = 3.2;
+    var largura_total = 1.6;
     var altura_do_chão = 0.2;
-    var alt = 4.5;
+    var alt = 1.9;
     var tamanho_diagonal_DS = Math.sqrt(
         Math.pow(alt / 2, 2) + Math.pow(largura_total, 2)
     );
@@ -161,12 +161,13 @@ function gerar_rua(
         (pos_z = pos_z)
     );
     // ANCHOR  Gerar Caixas
-    var qnt_cubos = 3;
+    //ar qnt_cubos = altura;
     gerar_caixas();
     function gerar_caixas() {
         var mult_largura = 3;
         var mult_altura = 0.245;
         var posição_y = 0.2;
+        var qnt_cubos = 3;
 
         var c1_x, c1_y, c1_z;
         c1_x = 2;
@@ -186,6 +187,27 @@ function gerar_rua(
             );
             posição_y += altura_longarina;
         }
+
+        var cubo2 = gerar_cubo(
+            cena,
+            3,
+            2,
+            3,
+            0x00ff00,
+            pos_x,
+            pos_y - 11 * mult_altura,
+            pos_z
+        );
+        var cubo3 = gerar_cubo(
+            cena,
+            2,
+            3,
+            3,
+            0x0000ff,
+            pos_x + mult_largura,
+            pos_y - 9 * mult_altura,
+            pos_z
+        );
         /*
         var cubo1 = gerar_cubo(
             cena,
@@ -212,27 +234,6 @@ function gerar_rua(
         pos_z
     );
     */
-
-        var cubo2 = gerar_cubo(
-            cena,
-            3,
-            2,
-            3,
-            0x00ff00,
-            pos_x,
-            pos_y - 11 * mult_altura,
-            pos_z
-        );
-        var cubo3 = gerar_cubo(
-            cena,
-            2,
-            3,
-            3,
-            0x0000ff,
-            pos_x + mult_largura,
-            pos_y - 9 * mult_altura,
-            pos_z
-        );
 
         //posição_y += altura_longarina;
     }
@@ -360,13 +361,12 @@ function gerar_rua_dupla(
         //         QNT.corredores * 3(profundidade)
         corredor = corredor * 3 * profundidade_padrão;
     }
-
     for (repetir = 0; repetir < horizontal; repetir++) {
         var pos_z_2 = corredor - 3.2;
         var i = 0;
 
         while (i < quantidade) {
-            gerar_rua(
+            gerar_longarina(
                 //1
                 cena,
                 0,
@@ -378,7 +378,7 @@ function gerar_rua_dupla(
                 posição_y,
                 corredor
             );
-            gerar_rua(
+            gerar_longarina(
                 //2
                 cena,
                 0,
@@ -411,11 +411,11 @@ function gerar_rua_unica(
     for (var repetir = 0; repetir < comprimento; repetir++) {
         var i = 0;
         while (i < altura) {
-            gerar_rua(
+            gerar_longarina(
                 cena,
                 0,
                 0,
-                0,
+                altura,
                 0xff4500,
                 0x8b4513,
                 posição_x,
@@ -430,4 +430,4 @@ function gerar_rua_unica(
     }
 }
 
-export { gerar_rua, gerar_rua_dupla, gerar_rua_unica };
+export { gerar_longarina, gerar_rua_dupla, gerar_rua_unica };

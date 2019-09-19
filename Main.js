@@ -1,25 +1,36 @@
-import * as THREE from "./three.js-master/build/three.module.js";
-import { MapControls } from "./three.js-master/examples/jsm/controls/OrbitControls.js";
-import * as rua from "./js/gerar_longarina";
+import * as THREE from "./three.js-master/build/three.module";
+import * as rua from "./js/gerar_prédios(antigo)";
 import * as Piso from "./js/ambiente/Piso";
+//import { Camera } from "./js/ambiente/camera";
+import { gerar_prédios } from "./js/gerar_prédios";
+import { MapControls } from "./three.js-master/examples/jsm/controls/OrbitControls.js";
+
+// TODO Testar frustum;
+
 //var longarina = require("./js/gerar_longarina");
 
 //ANCHOR  Init
+//var canvas = document.querySelector("#c");
+var cena = new THREE.Scene();
+var renderizar = new THREE.WebGLRenderer({
+    preserveDrawingBuffer: true,
+    antialias: true
+});
+var cam = Camera(renderizar);
+
 init();
+//rend();
 /*var largura_piso = 250,
     profundidade_piso = 250;
 */
 function init() {
     //Cena
-    var cena = new THREE.Scene();
     //Cor de fundo
     cena.background = new THREE.Color(0x000000);
     //Tipo de renderizador
-    var renderizar = new THREE.WebGLRenderer({
-        antialias: true
-    });
-    var cam = Camera(renderizar);
+
     //Renderizador
+    renderizar.autoClear = false;
     renderizar.setPixelRatio(window.devicePixelRatio);
     var render = renderizar.setSize(window.innerWidth, window.innerHeight);
 
@@ -32,12 +43,17 @@ function init() {
     // (cena aonde será renderizado , altura, largura , corredor)
     // Por Prompt
     var r = 0;
-    var lr = 6.2;
+    var lr = 2.7;
     var largura_rua = lr + 3 * (lr / 2);
     var profundidade_do_piso = largura_rua;
     var comprimento_do_piso = 10.2;
 
-    var galpao = Array();
+    var luz = new THREE.AmbientLight(0xffffff);
+    piso(250, 50);
+    cena.add(luz);
+    gerar_prédios(cena, 53, 6);
+
+    /*var galpao = Array();
     while (r < 1) {
         var qnt = prompt("Quantas ruas gerar ? ");
         var profpiso = profundidade_do_piso * qnt + 15.5;
@@ -75,6 +91,8 @@ function init() {
         }
         r = 1;
     }
+    */
+    //cena.updateMatrixWorld();
     function piso(comprimento_piso, profundidade_piso) {
         //Piso
         var piso_geometria = new THREE.BoxGeometry(
@@ -99,23 +117,51 @@ function init() {
     */
 
     // Loop de renderização
-    function animate() {
+
+    var animate = function() {
         requestAnimationFrame(animate);
         renderizar.render(cena, cam);
-    }
+    };
     animate();
 
     // appends
     document.body.appendChild(renderizar.domElement);
+    console.log(renderizar.info.render);
 }
 
+//ANCHOR  Eventos de renderização
+//document.addEventListener("mousedown", request_render, false);
+//document.addEventListener("mousemove", request_render, false);
+//document.addEventListener("wheel", request_render, false);
+
+// ANCHOR render
+/*
+function rend() {
+    renderizar.render(cena, cam);
+    if (ultimo_clique + standby < Date.now()) {
+        clicando = false;
+    } else {
+        clicando = true;
+        requestAnimationFrame(rend);
+    }
+}
+var ultimo_clique = Date.now();
+var clicando = true;
+var standby = 4000; // ms
+function request_render() {
+    ultimo_clique = Date.now();
+    if (!clicando) {
+        requestAnimationFrame(rend);
+    }
+}
+*/
 //ANCHOR Camera
 function Camera(render) {
     var camera = new THREE.PerspectiveCamera(
-        80,
+        75,
         window.innerWidth / window.innerHeight,
         0.1,
-        1000
+        150
     );
 
     //Posição da câmera
@@ -123,18 +169,13 @@ function Camera(render) {
     camera.position.y = 20;
     camera.position.z = 18;
 
-    controles(camera, render);
-
-    return camera;
-}
-
-function controles(camera, render) {
     // MapControls : Usa a câmera com o mouse, (camera, onde irá renderizar)
     var camControles = new MapControls(camera, render.domElement);
-    camControles.minDistance = 10;
+    //camControles.addEventListener("change   ", animate);
+    camControles.minDistance = 1;
     camControles.maxDistance = 50;
     // Ângulo máximo de rotação da image, PI = 180°
     camControles.maxPolarAngle = Math.PI / 2.2; //Math.PI / 2;
 
-    return camControles;
+    return camera;
 }
