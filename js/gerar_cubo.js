@@ -11,11 +11,7 @@ function gerar_cubo(
     pos_y = 0,
     pos_z = 0
 ) {
-    var geometria_cubo = new THREE.BoxBufferGeometry(
-        largura,
-        altura,
-        profundidade
-    );
+    var geometria_cubo = new THREE.BoxGeometry(largura, altura, profundidade);
     var material_cubo = new THREE.MeshBasicMaterial({
         color: cor_hexadecimal
     });

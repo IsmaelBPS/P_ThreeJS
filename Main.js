@@ -1,9 +1,9 @@
 import * as THREE from "./three.js-master/build/three.module";
 import * as rua from "./js/gerar_prédios(antigo)";
 import * as Piso from "./js/ambiente/Piso";
-//import { Camera } from "./js/ambiente/camera";
+import { Camera } from "./js/ambiente/camera";
 import { gerar_prédios } from "./js/gerar_prédios";
-import { MapControls } from "./three.js-master/examples/jsm/controls/OrbitControls.js";
+//import { MapControls } from "./three.js-master/examples/jsm/controls/OrbitControls.js";
 
 // TODO Testar frustum;
 
@@ -13,13 +13,12 @@ import { MapControls } from "./three.js-master/examples/jsm/controls/OrbitContro
 //var canvas = document.querySelector("#c");
 var cena = new THREE.Scene();
 var renderizar = new THREE.WebGLRenderer({
-    preserveDrawingBuffer: true,
     antialias: true
 });
-var cam = Camera(renderizar);
+const cam = Camera(renderizar);
 
 init();
-//rend();
+rend();
 /*var largura_piso = 250,
     profundidade_piso = 250;
 */
@@ -30,7 +29,6 @@ function init() {
     //Tipo de renderizador
 
     //Renderizador
-    renderizar.autoClear = false;
     renderizar.setPixelRatio(window.devicePixelRatio);
     var render = renderizar.setSize(window.innerWidth, window.innerHeight);
 
@@ -43,15 +41,29 @@ function init() {
     // (cena aonde será renderizado , altura, largura , corredor)
     // Por Prompt
     var r = 0;
-    var lr = 2.7;
-    var largura_rua = lr + 3 * (lr / 2);
+    var ll = 1.35;
+    var largura_rua = ll + 3 * (ll / 2);
     var profundidade_do_piso = largura_rua;
-    var comprimento_do_piso = 10.2;
+    const largura_longarina_2pallets = 2.4;
 
     var luz = new THREE.AmbientLight(0xffffff);
     piso(250, 50);
     cena.add(luz);
     gerar_prédios(cena, 53, 6);
+    //colocar_caixas(cena);
+    /*
+    while (r < 1) {
+        var qnt_ruas = prompt("Ruas : ");
+        //const profundidade_piso = lr * qt
+
+        for (var i = 0; i < qnt_ruas; i++) {
+            var altura_rua = prompt("Níveis da rua " + (i + 1) + " : ");
+            var comprimento_rua = prompt("Prédio(s) da rua " + (i + 1) + " : ");
+            var comprimentoPiso = largura_longarina_2pallets * comprimento_rua;
+            piso(comprimentoPiso, 50);
+        }
+    }
+    */
 
     /*var galpao = Array();
     while (r < 1) {
@@ -117,27 +129,29 @@ function init() {
     */
 
     // Loop de renderização
-
+    /*
     var animate = function() {
         requestAnimationFrame(animate);
         renderizar.render(cena, cam);
     };
     animate();
 
+    */
     // appends
     document.body.appendChild(renderizar.domElement);
     console.log(renderizar.info.render);
 }
 
 //ANCHOR  Eventos de renderização
-//document.addEventListener("mousedown", request_render, false);
-//document.addEventListener("mousemove", request_render, false);
+document.addEventListener("mousedown", request_render, false);
+document.addEventListener("mousemove", request_render, false);
 //document.addEventListener("wheel", request_render, false);
 
 // ANCHOR render
-/*
+
 function rend() {
     renderizar.render(cena, cam);
+    //console.log(renderizar.info.render);
     if (ultimo_clique + standby < Date.now()) {
         clicando = false;
     } else {
@@ -147,35 +161,12 @@ function rend() {
 }
 var ultimo_clique = Date.now();
 var clicando = true;
-var standby = 4000; // ms
+var standby = 600; // ms
 function request_render() {
     ultimo_clique = Date.now();
     if (!clicando) {
         requestAnimationFrame(rend);
     }
 }
-*/
-//ANCHOR Camera
-function Camera(render) {
-    var camera = new THREE.PerspectiveCamera(
-        75,
-        window.innerWidth / window.innerHeight,
-        0.1,
-        150
-    );
 
-    //Posição da câmera
-    camera.position.x = 0;
-    camera.position.y = 20;
-    camera.position.z = 18;
-
-    // MapControls : Usa a câmera com o mouse, (camera, onde irá renderizar)
-    var camControles = new MapControls(camera, render.domElement);
-    //camControles.addEventListener("change   ", animate);
-    camControles.minDistance = 1;
-    camControles.maxDistance = 50;
-    // Ângulo máximo de rotação da image, PI = 180°
-    camControles.maxPolarAngle = Math.PI / 2.2; //Math.PI / 2;
-
-    return camera;
-}
+export { THREE };

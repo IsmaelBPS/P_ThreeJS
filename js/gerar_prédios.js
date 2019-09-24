@@ -11,8 +11,11 @@ const altura_longarina = 1.9;
 const largura_longarina_2pallets = 2.4 - 0.04;
 const largura_longarina_3pallets = 3.6 - 0.04;
 const profundidade_longarina = 1.3 + 0.05;
+const espaço_pallet_lateral = 0.1;
 const largura_corredor = 3 * profundidade_longarina;
 var longarina_base = 2;
+var vetor_caixas = [];
+var matriz_caixas = [];
 
 // Loader do formato gltf/glb
 const loader = new GLTFLoader();
@@ -35,16 +38,29 @@ function gerar_prédios(
     var niveis = n_niveis;
     var repetir_comprimento = 0;
     var p = 0;
+    //const profundidade_armazem =
 
     /*
     for (var i = 0; i <= 20; i++) {
-        gerar_longarina_2pallets_chao(cena, p, 0, 0);
-        p += largura_longarina_2pallets;
+        var px = 0;
+        var cubo1 = gerar_cubo(
+            cena,
+            1,
+            1,
+            1.2,
+            0xff0000,
+            i * largura_longarina_2pallets + espaço_pallet_lateral + 0.5 + 0.04,
+            0.15 + 0.5,
+            pos_z - 0.5
+        );
+        //gerar_longarina_2pallets_chao(cena, p, 0, 0);
+        //p += largura_longarina_2pallets;
     }
     */
-
+    var matriz_cubos = [];
     while (repetir_comprimento < predios) {
         for (var i = 0; i < niveis; i++) {
+            var fila_cubo = [];
             switch (longarina_base) {
                 case 2:
                     var long_base = gerar_longarina_2pallets_chao(
@@ -54,17 +70,41 @@ function gerar_prédios(
                         pos_z
                     );
 
-                    if (i >= 1) {
+                    var cb = gerar_cubo(
+                        cena,
+                        1,
+                        1,
+                        1.2,
+                        0xff0000,
+                        pos_x + espaço_pallet_lateral + 0.5 + 0.04,
+                        0.15 + 0.5,
+                        pos_z - 0.5
+                    );
+                    fila_cubo.push(cb);
+                    if (i > 0) {
                         var long_altura = gerar_longarina_2pallets(
                             cena,
                             pos_x,
                             i * altura_longarina,
                             0
                         );
+
+                        var cb = gerar_cubo(
+                            cena,
+                            1,
+                            1,
+                            1.2,
+                            0xff0000,
+                            pos_x + espaço_pallet_lateral + 0.5 + 0.04,
+                            i * altura_longarina + 0.25 + 0.5,
+                            pos_z - 0.5
+                        );
+                        fila_cubo.push(cb);
                     }
                     if (i == niveis - 1) {
                         pos_x = pos_x + largura_longarina_2pallets;
                     }
+                    console.log(fila_cubo[0]);
                     break;
                 case 3:
                     var long_Base = gerar_longarina_3pallets_chao(
@@ -73,13 +113,14 @@ function gerar_prédios(
                         pos_z
                     );
 
-                    if (i >= 1) {
+                    if (i > 0) {
                         var long_altura = gerar_longarina_3pallets(
                             cena,
                             pos_x,
                             i * altura_longarina
                         );
                     }
+
                     if (i == niveis - 1) {
                         pos_x = pos_x + largura_longarina_3pallets;
                     }
@@ -90,6 +131,8 @@ function gerar_prédios(
         }
         repetir_comprimento++;
     }
+
+    //colocar_caixas(cena, n_predios, n_niveis, pos_z);
     //const geometria_predio = new THREE.BufferGeometry();
     //var predio = [];
     /*
@@ -195,6 +238,7 @@ function gerar_longarina_3pallets(cena, posição_x, posição_y) {
 }
 //ANCHOR gerar longarina 2 pallets no chão
 function gerar_longarina_2pallets_chao(cena, posição_x, posição_y, posição_z) {
+    /*
     mtl_obj.load("../../Projeto_ThreeJS/Modelagens/384_2.mtl", (material) => {
         material.preload();
 
@@ -203,35 +247,37 @@ function gerar_longarina_2pallets_chao(cena, posição_x, posição_y, posição
         ld_obj.setMaterials(material);
         ld_obj.load(
             "../../Projeto_ThreeJS/Modelagens/384_2.obj",
-            function(modelo) {
+            (modelo) => {
+                modelo.position.z = posição_z;
+                modelo.position.y = posição_y;
                 modelo.position.x = posição_x;
-                modelo.add;
+
+                //modelo.add;
                 cena.add(modelo);
             },
             undefined,
-            function(erro) {
+            (erro) => {
                 console.log(erro);
             }
         );
     });
+    */
 
-    /*loader.load(
-        "../../Projeto_ThreeJS/Modelagens/Longarina_Junto_2pallets_chao_384.gltf",
+    loader.load(
+        "../../Projeto_ThreeJS/Modelagens/Longarina_Junto_2pallets_chão_256px.glb",
         (modelo) => {
             modelo.scene.position.x = posição_x;
-            modelo.scene.position.y = posição_y + 0.01;
+            modelo.scene.position.y = posição_y;
             modelo.scene.position.z = posição_z;
-            modelo.scene.autoUpdate = true;
             modelo.scene.frustumCulled = true;
             //var m = new GeometryReducer(modelo.scene);
-            return cena.add(modelo.scene); //cena.add(modelo.scene);
+            cena.add(modelo.scene); //cena.add(modelo.scene);
         },
         undefined,
         (erro) => {
             console.log(erro);
         }
     );
-    */
 }
 
 //ANCHOR gerar longarina 3 pallets no chão
@@ -350,5 +396,113 @@ function base_horizontal(
     return cena.add(rua_horizontal);
 }
 */
+// ANCHOR Caixas
+function colocar_caixas(cena, predios, niveis, pos_z) {
+    for (var i = 0; i < predios; i++) {
+        var px = 0;
+        var cubo1 = gerar_cubo(
+            cena,
+            1,
+            1,
+            1.2,
+            0xff0000,
+            i * largura_longarina_2pallets + espaço_pallet_lateral + 0.5 + 0.04,
+            0.15 + 0.5,
+            pos_z - 0.5
+        );
+        //gerar_longarina_2pallets_chao(cena, p, 0, 0);
+        //p += largura_longarina_2pallets;
+    }
+}
+
+//ANCHOR  Rua única
+function rua_unica() {
+    var predios = n_predios;
+    var niveis = n_niveis;
+    var repetir_comprimento = 0;
+
+    while (repetir_comprimento < predios) {
+        for (var i = 0; i < niveis; i++) {
+            switch (longarina_base) {
+                case 2:
+                    var long_base = gerar_longarina_2pallets_chao(
+                        cena,
+                        pos_x,
+                        0,
+                        pos_z
+                    );
+
+                    gerar_cubo(
+                        cena,
+                        1,
+                        1,
+                        1.2,
+                        0xff0000,
+                        pos_x + espaço_pallet_lateral + 0.5 + 0.04,
+                        0.15 + 0.5,
+                        pos_z - 0.5
+                    );
+
+                    if (i >= 1) {
+                        var long_altura = gerar_longarina_2pallets(
+                            cena,
+                            pos_x,
+                            i * altura_longarina,
+                            0
+                        );
+
+                        gerar_cubo(
+                            cena,
+                            1,
+                            1,
+                            1.2,
+                            0xff0000,
+                            pos_x + espaço_pallet_lateral + 0.5 + 0.04,
+                            i * altura_longarina + 0.25 + 0.5,
+                            pos_z - 0.5
+                        );
+                    }
+                    if (i == niveis - 1) {
+                        pos_x = pos_x + largura_longarina_2pallets;
+                    }
+                    break;
+                case 3:
+                    var long_Base = gerar_longarina_3pallets_chao(
+                        cena,
+                        pos_x,
+                        pos_z
+                    );
+
+                    if (i > 0) {
+                        var long_altura = gerar_longarina_3pallets(
+                            cena,
+                            pos_x,
+                            i * altura_longarina
+                        );
+                    }
+
+                    if (i == niveis - 1) {
+                        pos_x = pos_x + largura_longarina_3pallets;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        repetir_comprimento++;
+        pos_x = 0;
+        pos_y = 0;
+        pos_z = 0;
+    }
+}
+
+//ANCHOR  Rua Dupla
+function rua_dupla(cena, pos_x, pos_y, pos_z) {
+    const largura_longarina = 1.35;
+    for (var i = 0; i < 1; i++) {
+        rua_unica(cena, pos_x, pos_y, pos_z);
+        pos_z = pos_z + profundidade_longarina;
+    }
+}
 
 export { gerar_prédios };
