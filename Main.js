@@ -49,7 +49,7 @@ function init() {
     var luz = new THREE.AmbientLight(0xffffff);
     piso(250, 50);
     cena.add(luz);
-    gerar_prédios(cena, 53, 6);
+    gerar_prédios(cena, 26, 6);
     //colocar_caixas(cena);
     /*
     while (r < 1) {
