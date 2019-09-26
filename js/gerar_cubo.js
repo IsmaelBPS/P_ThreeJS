@@ -12,7 +12,7 @@ function gerar_cubo(
     pos_z = 0
 ) {
     var geometria_cubo = new THREE.BoxGeometry(largura, altura, profundidade);
-    var material_cubo = new THREE.MeshBasicMaterial({
+    var material_cubo = new THREE.MeshLambertMaterial({
         color: cor_hexadecimal
     });
 
@@ -22,6 +22,13 @@ function gerar_cubo(
     cubo.position.y = pos_y;
     cubo.position.z = pos_z;
 
+    //cubo.material.color.setHex(0x00ff00);
+
+    cubo.castShadow = true;
+    cubo.receiveShadow = true;
+
     return cena.add(cubo);
 }
-export { gerar_cubo };
+export {
+    gerar_cubo
+};

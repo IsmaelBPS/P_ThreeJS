@@ -1,12 +1,21 @@
 import * as THREE from "../three.js-master/build/three.module";
-import { GLTFLoader } from "../three.js-master/examples/jsm/loaders/GLTFLoader";
+import {
+    GLTFLoader
+} from "../three.js-master/examples/jsm/loaders/GLTFLoader";
 //import { BufferGeometryUtils } from "../three.js-master/examples/jsm/utils/BufferGeometryUtils";
 //import { GeometryReducer } from "./geometry_reducer";
-import { gerar_cubo } from "./gerar_cubo";
-import { OBJLoader } from "../three.js-master/examples/jsm/loaders/OBJLoader";
-import { MTLLoader } from "../three.js-master/examples/jsm/loaders/MTLLoader";
+import {
+    gerar_cubo
+} from "./gerar_cubo";
+import {
+    OBJLoader
+} from "../three.js-master/examples/jsm/loaders/OBJLoader";
+import {
+    MTLLoader
+} from "../three.js-master/examples/jsm/loaders/MTLLoader";
 
 // Variáveis do arquivo
+const profundidade_rua_total = 6.75;
 const altura_longarina = 1.9;
 const largura_longarina_2pallets = 2.36; // 2.4 - 0.04
 const largura_longarina_3pallets = 3.6 - 0.04;
@@ -24,6 +33,8 @@ const mtl_obj = new MTLLoader();
 // ANCHOR  gerar prédios
 function gerar_prédios(
     cena,
+    p_z,
+    n_ruas,
     n_predios,
     n_niveis,
     cor_hexadecimal_base,
@@ -57,83 +68,12 @@ function gerar_prédios(
         //p += largura_longarina_2pallets;
     }
     */
-    var matriz_cubos = [];
-    while (repetir_comprimento < predios) {
-        for (var i = 0; i < niveis; i++) {
-            var fila_cubo = [];
-            switch (longarina_base) {
-                case 2:
-                    var long_base = gerar_longarina_2pallets_chao(
-                        cena,
-                        pos_x,
-                        0,
-                        pos_z
-                    );
+    //var matriz_cubos = [];
 
-                    var cb = gerar_cubo(
-                        cena,
-                        1,
-                        1,
-                        1.2,
-                        0xff0000,
-                        pos_x + espaço_pallet_lateral + 0.5 + 0.04,
-                        0.15 + 0.5,
-                        pos_z - 0.5
-                    );
-                    //fila_cubo.push(cb);
-                    if (i > 0) {
-                        var long_altura = gerar_longarina_2pallets(
-                            cena,
-                            pos_x,
-                            i * altura_longarina,
-                            0
-                        );
-
-                        var cb = gerar_cubo(
-                            cena,
-                            1,
-                            1,
-                            1.2,
-                            0xff0000,
-                            pos_x + espaço_pallet_lateral + 0.5 + 0.04,
-                            i * altura_longarina + 0.25 + 0.5,
-                            pos_z - 0.5
-                        );
-                        //fila_cubo.push(cb);
-                    }
-                    if (i == niveis - 1) {
-                        pos_x = pos_x + largura_longarina_2pallets;
-                    }
-                    //console.log(fila_cubo[0]);
-                    break;
-                case 3:
-                    var long_Base = gerar_longarina_3pallets_chao(
-                        cena,
-                        pos_x,
-                        pos_z
-                    );
-
-                    if (i > 0) {
-                        var long_altura = gerar_longarina_3pallets(
-                            cena,
-                            pos_x,
-                            i * altura_longarina
-                        );
-                    }
-
-                    if (i == niveis - 1) {
-                        pos_x = pos_x + largura_longarina_3pallets;
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-        repetir_comprimento++;
-    }
-
-    rua_dupla(cena, 0, 0, 2);
-
+    //0for (var i = 0; i == 0; i++) {
+    rua_dupla(cena, niveis, predios, 5, 0, p_z);
+    //pos_z -= profundidade_rua_total;
+    //}
     //colocar_caixas(cena, n_predios, n_niveis, pos_z);
     //const geometria_predio = new THREE.BufferGeometry();
     //var predio = [];
@@ -164,7 +104,7 @@ function gerar_prédios(
                 // predio.push(long_altura);
             }
             if (i == niveis - 1) {
-                pos_x = pos_x + largura_longarina_3pallets;
+                p.os_x = pos_x + largura_longarina_3pallets;
             }
         }
         matriz_rua.push(predio);
@@ -208,13 +148,24 @@ function gerar_prédios(
 //ANCHOR gerar longarina de 2 pallets
 function gerar_longarina_2pallets(cena, posição_x, posição_y, posição_z) {
     loader.load(
-        "../../Projeto_ThreeJS/Modelagens/Longarina_Separado_2pallets_128px.glb",
+        "../../Projeto_ThreeJS/Modelagens/Longarina_junto_2pallets_256px.gltf",
         (modelo) => {
             modelo.scene.position.x = posição_x;
             modelo.scene.position.y = posição_y;
             modelo.scene.position.z = posição_z;
             modelo.scene.frustumCulled = true;
+            //modelo.scene.children[0].castShadow = true;
+            //modelo.scene.children[0].receiveShadow = true;
+            //modelo.scene.receiveShadow = true;
+
             cena.add(modelo.scene); //cena.add(modelo.scene);
+
+            modelo.scene.traverse((mdl) => {
+                if (mdl.isMesh) {
+                    mdl.castShadow = true;
+                    mdl.receiveShadow = true;
+                }
+            });
         },
         undefined,
         (erro) => {
@@ -271,7 +222,10 @@ function gerar_longarina_2pallets_chao(cena, posição_x, posição_y, posição
             modelo.scene.position.x = posição_x;
             modelo.scene.position.y = posição_y;
             modelo.scene.position.z = posição_z;
+            modelo.scene.receiveShadow = true;
             modelo.scene.frustumCulled = true;
+            modelo.scene.children[0].castShadow = true;
+            modelo.scene.children[0].receiveShadow = true;
             //var m = new GeometryReducer(modelo.scene);
             cena.add(modelo.scene); //cena.add(modelo.scene);
         },
@@ -418,15 +372,16 @@ function colocar_caixas(cena, predios, niveis, pos_z) {
 }
 
 //ANCHOR  Rua única
-function rua_unica(cena, pos_x, pos_y, pos_z) {
-    const n_predios = 10;
-    const n_niveis = 5;
-    var predios = n_predios;
-    var niveis = n_niveis;
+function rua_unica(cena, niveis, predios, pos_x, pos_y, pos_z) {
+    const n_predios = predios;
+    const n_niveis = niveis;
+    //var predios = n_predios;
+    //var niveis = n_niveis;
     var repetir_comprimento = 0;
 
-    while (repetir_comprimento < predios) {
-        for (var i = 0; i < niveis; i++) {
+    while (repetir_comprimento < n_predios) {
+        for (var i = 0; i < n_niveis; i++) {
+            let cor = 0xff0000;
             switch (longarina_base) {
                 case 2:
                     var long_base = gerar_longarina_2pallets_chao(
@@ -441,10 +396,10 @@ function rua_unica(cena, pos_x, pos_y, pos_z) {
                         1,
                         1,
                         1.2,
-                        0xff0000,
+                        cor,
                         pos_x + espaço_pallet_lateral + 0.5 + 0.04,
                         0.15 + 0.5,
-                        pos_z - 0.5
+                        pos_z - 0.55
                     );
 
                     if (i > 0) {
@@ -460,10 +415,10 @@ function rua_unica(cena, pos_x, pos_y, pos_z) {
                             1,
                             1,
                             1.2,
-                            0xff0000,
+                            cor,
                             pos_x + espaço_pallet_lateral + 0.5 + 0.04,
                             i * altura_longarina + 0.25 + 0.5,
-                            pos_z - 0.5
+                            pos_z - 0.55
                         );
                     }
                     if (i == niveis - 1) {
@@ -502,15 +457,29 @@ function rua_unica(cena, pos_x, pos_y, pos_z) {
 }
 
 //ANCHOR  Rua Dupla
-function rua_dupla(cena, pos_x, pos_y, pos_z) {
-    pos_z = 10;
-    const largura_longarina = 1.35;
-    for (var i = 0; i < 1; i++) {
-        pos_z -= largura_longarina;
-        rua_unica(cena, pos_x, pos_y, pos_z);
-        pos_z = pos_z - profundidade_longarina;
-        rua_unica(cena, pos_x, pos_y, pos_z);
-    }
+function rua_dupla(cena, niveis, predios, pos_x, pos_y, pos_z) {
+    // for (var i = 0; i < 1; i++) {
+    //pos_z -= profundidade_rua_total;
+    rua_unica(
+        cena,
+        niveis,
+        predios,
+        pos_x,
+        pos_y,
+        pos_z + profundidade_longarina
+    );
+    //pos_z = pos_z - profundidade_longarina;
+    rua_unica(
+        cena,
+        niveis,
+        predios,
+        pos_x,
+        pos_y,
+        pos_z + profundidade_rua_total
+    );
+    //}
 }
 
-export { gerar_prédios };
+export {
+    gerar_prédios
+};

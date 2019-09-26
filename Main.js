@@ -1,8 +1,15 @@
 import * as THREE from "./three.js-master/build/three.module";
 import * as rua from "./js/gerar_prédios(antigo)";
 import * as Piso from "./js/ambiente/Piso";
-import { Camera } from "./js/ambiente/camera";
-import { gerar_prédios } from "./js/gerar_prédios";
+import {
+    Camera
+} from "./js/ambiente/camera";
+import {
+    gerar_prédios
+} from "./js/gerar_prédios";
+import {
+    iluminacao
+} from "./js/ambiente/iluminação";
 //import { MapControls } from "./three.js-master/examples/jsm/controls/OrbitControls.js";
 
 // TODO Testar frustum;
@@ -13,8 +20,13 @@ import { gerar_prédios } from "./js/gerar_prédios";
 //var canvas = document.querySelector("#c");
 var cena = new THREE.Scene();
 var renderizar = new THREE.WebGLRenderer({
-    antialias: true
+    antialias: true,
+    powerPreference: "high-performance"
 });
+renderizar.shadowMap.enabled = true;
+renderizar.shadowMap.type = THREE.PCFSoftShadowMap;
+//renderizar.shadowMap.type = THREE.PCFSoftShadowMap;
+//renderizar.shadowMapSoft = true;
 const cam = Camera(renderizar);
 
 init();
@@ -25,7 +37,44 @@ rend();
 function init() {
     //Cena
     //Cor de fundo
-    cena.background = new THREE.Color(0x000000);
+    /*  const light = new THREE.DirectionalLight(0xffffff, 1, 100);
+    light.castShadow = true;
+    light.position.set(0, 1, -25);
+    //light.position.multiplyScalar(1.3);
+    light.shadowCameraVisible = true;
+  */
+    var ruas = new Array();
+    ruas[0] = gerar_prédios(cena, -15, 1, 10, 4);
+    console.log(ruas[0]);
+    for (let i = 0; i < 2; i++) {
+
+    }
+
+    /*
+    const light = new THREE.PointLight(0xffffff, 1, 1000);
+    light.castShadow = true;
+    light.position.set(0, 20, -3.5);
+    light.shadow.mapSize.width = 2048;
+    light.shadow.mapSize.height = 2048;
+
+    const light2 = new THREE.PointLight(0xffffff, 1, 1000);
+    light2.castShadow = true;
+    light2.position.set(20, 14, -25);
+
+    const light3 = new THREE.PointLight(0xffffff, 1, 1000);
+    light3.castShadow = true;
+    light3.position.set(40, 14, -25);
+    light3.shadow.mapSize.width = 4096;
+    light3.shadow.mapSize.height = 4096;
+    */
+    //light.castShadow = true;
+
+    //cena.add(light);
+    //cena.add(light);
+    //cena.add(light2);
+    //cena.add(light3);
+    iluminacao(cena);
+    //cena.background = new THREE.Color(0x000000);
     //Tipo de renderizador
 
     //Renderizador
@@ -41,29 +90,34 @@ function init() {
     // (cena aonde será renderizado , altura, largura , corredor)
     // Por Prompt
     var r = 0;
-    var ll = 1.35;
-    var largura_rua = ll + 3 * (ll / 2);
-    var profundidade_do_piso = largura_rua;
     const largura_longarina_2pallets = 2.4;
+    const profundidade_longarina = 1.35;
+    const profundidade_rua_total = 6.75;
 
-    var luz = new THREE.AmbientLight(0xffffff);
-    piso(250, 50);
+    var luz = new THREE.AmbientLight(0xffffff, 0.8);
+    piso(100, 50);
     cena.add(luz);
-    gerar_prédios(cena, 26, 6);
+    //gerar_prédios(cena, 26, 6);
     //colocar_caixas(cena);
-    /*
+
     while (r < 1) {
         var qnt_ruas = prompt("Ruas : ");
+        var comprimento_piso = 0;
+        var profundidade_piso = 0;
         //const profundidade_piso = lr * qt
-
+        var pos_Z = -15;
         for (var i = 0; i < qnt_ruas; i++) {
+            const n_ruas = qnt_ruas;
             var altura_rua = prompt("Níveis da rua " + (i + 1) + " : ");
             var comprimento_rua = prompt("Prédio(s) da rua " + (i + 1) + " : ");
-            var comprimentoPiso = largura_longarina_2pallets * comprimento_rua;
-            piso(comprimentoPiso, 50);
+            comprimento_piso = largura_longarina_2pallets * comprimento_rua;
+            profundidade_piso = n_ruas * profundidade_longarina;
+            gerar_prédios(cena, pos_Z, n_ruas, comprimento_rua, altura_rua);
+            pos_Z -= profundidade_rua_total;
         }
+        //piso(comprimento_piso, profundidade_piso);
+        r = 1;
     }
-    */
 
     /*var galpao = Array();
     while (r < 1) {
@@ -105,6 +159,7 @@ function init() {
     }
     */
     //cena.updateMatrixWorld();
+    //ANCHOR  Piso
     function piso(comprimento_piso, profundidade_piso) {
         //Piso
         var piso_geometria = new THREE.BoxGeometry(
@@ -113,10 +168,13 @@ function init() {
             profundidade_piso
         );
         var textura_piso = new THREE.TextureLoader().load("./Imagens/piso.jpg");
-        var piso_material = new THREE.MeshBasicMaterial({ map: textura_piso });
+        var piso_material = new THREE.MeshLambertMaterial({
+            map: textura_piso
+        });
         var piso = new THREE.Mesh(piso_geometria, piso_material);
-        piso.position.x = comprimento_piso / 2 - 6; // 110;
-        piso.position.z = -(profundidade_piso / 2) + 12.2; // -110;
+        piso.receiveShadow = true;
+        piso.position.x = comprimento_piso / 2; // 110;
+        piso.position.z = -(profundidade_piso / 2) + 7; // -110;
         //piso.rotateX(-Math.PI / 2);
         cena.add(piso);
     }
@@ -169,4 +227,6 @@ function request_render() {
     }
 }
 
-export { THREE };
+export {
+    THREE
+};
