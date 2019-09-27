@@ -1,18 +1,31 @@
+import * as THREE from '../../three.js-master/build/three.module';
 var profundidade_piso, comprimento_piso;
 //ANCHOR  Piso
-function p(
+function piso(
+    cena,
     quantidade_profundidade,
     quantidade_comprimento,
-    pr = 15.6,
-    cr = 10.2
+
 ) {
-    var largura_padrao_predio = 3;
-    var largura_padrao_corredor = 3 * largura_padrao_predio;
-    ++quantidade_profundidade;
-    comprimento_piso = cr * quantidade_comprimento;
-    //Mesma largura de um corredor, para por no fim da maior rua
-    comprimento_piso += largura_padrao_corredor;
-    profundidade_piso = pr * quantidade_profundidade;
+    //Piso
+    var piso_geometria = new THREE.BoxGeometry(
+        comprimento_piso,
+        0.001,
+        profundidade_piso
+    );
+    var textura_piso = new THREE.TextureLoader().load("./Imagens/piso.jpg");
+    var piso_material = new THREE.MeshLambertMaterial({
+        map: textura_piso
+    });
+    var piso = new THREE.Mesh(piso_geometria, piso_material);
+    piso.receiveShadow = true;
+    piso.position.x = comprimento_piso / 2;
+    piso.position.z = -(profundidade_piso / 2);
+    //piso.rotateX(-Math.PI / 2);
+    cena.add(piso);
 }
 
-export { p, comprimento_piso, profundidade_piso };
+
+export {
+    piso
+};

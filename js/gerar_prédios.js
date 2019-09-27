@@ -466,7 +466,7 @@ function rua_dupla(cena, niveis, predios, pos_x, pos_y, pos_z) {
         predios,
         pos_x,
         pos_y,
-        pos_z + profundidade_longarina
+        pos_z - profundidade_longarina
     );
     //pos_z = pos_z - profundidade_longarina;
     rua_unica(
@@ -475,7 +475,7 @@ function rua_dupla(cena, niveis, predios, pos_x, pos_y, pos_z) {
         predios,
         pos_x,
         pos_y,
-        pos_z + profundidade_rua_total
+        pos_z - profundidade_rua_total
     );
     //}
 }

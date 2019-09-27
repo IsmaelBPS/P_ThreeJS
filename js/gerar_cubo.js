@@ -12,7 +12,7 @@ function gerar_cubo(
     pos_z = 0
 ) {
     var geometria_cubo = new THREE.BoxGeometry(largura, altura, profundidade);
-    var material_cubo = new THREE.MeshLambertMaterial({
+    var material_cubo = new THREE.MeshStandardMaterial({
         color: cor_hexadecimal
     });
 
