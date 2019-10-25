@@ -1,119 +1,136 @@
+/* eslint-disable camelcase */
 import * as THREE from "../three.js-master/build/three.module";
-import {
-    GLTFLoader
-} from "../three.js-master/examples/jsm/loaders/GLTFLoader";
-//import { BufferGeometryUtils } from "../three.js-master/examples/jsm/utils/BufferGeometryUtils";
-//import { GeometryReducer } from "./geometry_reducer";
-import {
-    gerar_cubo
-} from "./gerar_cubo";
-import {
-    OBJLoader
-} from "../three.js-master/examples/jsm/loaders/OBJLoader";
-import {
-    MTLLoader
-} from "../three.js-master/examples/jsm/loaders/MTLLoader";
+import { GLTFLoader } from "../three.js-master/examples/jsm/loaders/GLTFLoader";
+// import { BufferGeometryUtils } from "../three.js-master/examples/jsm/utils/BufferGeometryUtils";
+// import { GeometryReducer } from "./geometry_reducer";
+import { gerar_cubo } from "./gerar_cubo";
+import { OBJLoader } from "../three.js-master/examples/jsm/loaders/OBJLoader";
+// const MTTLoader = require('../three.js-master/examples/jsm/loaders/MTLLoader');
+import { MTLLoader } from "../three.js-master/examples/jsm/loaders/MTLLoader";
 
-// Variáveis do arquivo
+const json = require("../json/teste2.json");
+
+//ANCHOR  Variáveis do arquivo
 const profundidade_rua_total = 6.75;
-const altura_longarina = 1.9;
+const altura_longarina_19m = 1.9;
+const altura_longarina_1m = 1;
 const largura_longarina_2pallets = 2.36; // 2.4 - 0.04
 const largura_longarina_3pallets = 3.6 - 0.04;
 const profundidade_longarina = 1.3 + 0.05;
 const espaço_pallet_lateral = 0.1;
 const largura_corredor = 3 * profundidade_longarina;
-const longarina_base = 2;
+
+/*const longarina_base = () => {
+  let it = 0,
+    i = 0,
+    tamanho_longarina = 0;
+
+  while (it < 1) {
+    if (json.recordset[i].APTO >= tamanho_longarina) {
+      tamanho_longarina = json.recordset[i].APTO;
+    } else {
+      it = 1;
+    }
+
+    i++;
+  }
+  return tamanho_longarina;
+};
+*/
 var vetor_caixas = [];
 var matriz_caixas = [];
 
 // Loader do formato gltf/glb
 const loader = new GLTFLoader();
-//const ld_obj = new OBJLoader();
+
+// const ld_obj = new OBJLoader();
 const mtl_obj = new MTLLoader();
-// ANCHOR  gerar prédios
+// ANCHOR gerar prédios
 function gerar_prédios(
-    cena,
-    p_z,
-    n_ruas,
-    n_predios,
-    n_niveis,
-    cor_hexadecimal_base,
-    cor_hexadecimal_vertical,
-    pos_x = 0,
-    pos_y = 0,
-    pos_z = 0
+  cena,
+  rua,
+  p_z,
+  n_ruas,
+  n_predios,
+  n_niveis,
+  cor_hexadecimal_base,
+  cor_hexadecimal_vertical,
+  pos_x = 0,
+  pos_y = 0,
+  pos_z = 0
 ) {
-    //Frente
-    var matriz_rua = [];
-    var predios = n_predios;
-    var niveis = n_niveis;
-    var repetir_comprimento = 0;
-    var p = 0;
-    //const profundidade_armazem =
+  // Frente
+  var matriz_rua = [];
+  var predios = n_predios;
+  var niveis = n_niveis;
+  var repetir_comprimento = 0;
+  var p = 0;
+  // const profundidade_armazem =
 
-    /*
-    for (var i = 0; i <= 20; i++) {
-        var px = 0;
-        var cubo1 = gerar_cubo(
-            cena,
-            1,
-            1,
-            1.2,
-            0xff0000,
-            i * largura_longarina_2pallets + espaço_pallet_lateral + 0.5 + 0.04,
-            0.15 + 0.5,
-            pos_z - 0.5
-        );
-        //gerar_longarina_2pallets_chao(cena, p, 0, 0);
-        //p += largura_longarina_2pallets;
-    }
-    */
-    //var matriz_cubos = [];
-
-    //0for (var i = 0; i == 0; i++) {
-    rua_dupla(cena, niveis, predios, 5, 0, p_z);
-    //pos_z -= profundidade_rua_total;
-    //}
-    //colocar_caixas(cena, n_predios, n_niveis, pos_z);
-    //const geometria_predio = new THREE.BufferGeometry();
-    //var predio = [];
-    /*
-        if (longarina_base == 2) {
-            var long_base = gerar_longarina_2pallets_chao(cena, pos_x, pos_z);
-            //predio.push(long_Base);
-            if (i >= 1) {
-                var long_altura = gerar_longarina_2pallets(
-                    cena,
-                    pos_x,
-                    i * altura_longarina
-                );
-                //predio.push(long_altura);
-            }
-            if (i == niveis - 1) {
-                pos_x = pos_x + largura_longarina_2pallets;
-            }
-        } else {
-            var long_Base = gerar_longarina_3pallets_chao(cena, pos_x, pos_z);
-            //predio.push(long_Base);
-            if (i >= 1) {
-                var long_altura = gerar_longarina_3pallets(
-                    cena,
-                    pos_x,
-                    i * altura_longarina
-                );
-                // predio.push(long_altura);
-            }
-            if (i == niveis - 1) {
-                p.os_x = pos_x + largura_longarina_3pallets;
-            }
+  /*
+        for (var i = 0; i <= 20; i++) {
+            var px = 0;
+            var cubo1 = gerar_cubo(
+                cena,
+                1,
+                1,
+                1.2,
+                0xff0000,
+                i * largura_longarina_2pallets + espaço_pallet_lateral + 0.5 + 0.04,
+                0.15 + 0.5,
+                pos_z - 0.5
+            );
+            //gerar_longarina_2pallets_chao(cena, p, 0, 0);
+            //p += largura_longarina_2pallets;
         }
-        matriz_rua.push(predio);
-    }
-    */
-    //repetir_comprimento++;
+        */
+  // var matriz_cubos = [];
+
+  // 0for (var i = 0; i == 0; i++) {
+
+  rua_dupla(cena, rua, niveis, predios, 5, 0, p_z);
+  // pos_z -= profundidade_rua_total;
+  // }
+  // colocar_caixas(cena, n_predios, n_niveis, pos_z);
+  // const geometria_predio = new THREE.BufferGeometry();
+  // var predio = [];
+  /*
+            if (longarina_base == 2) {
+                var long_base = gerar_longarina_2pallets_chao(cena, pos_x, pos_z);
+                //predio.push(long_Base);
+                if (i >= 1) {
+                    var long_altura = gerar_longarina_2pallets(
+                        cena,
+                        pos_x,
+                        i * altura_longarina
+                    );
+                    //predio.push(long_altura);
+                }
+                if (i == niveis - 1) {
+                    pos_x = pos_x + largura_longarina_2pallets;
+                }
+            } else {
+                var long_Base = gerar_longarina_3pallets_chao(cena, pos_x, pos_z);
+                //predio.push(long_Base);
+                if (i >= 1) {
+                    var long_altura = gerar_longarina_3pallets(
+                        cena,
+                        pos_x,
+                        i * altura_longarina
+                    );
+                    // predio.push(long_altura);
+                }
+                if (i == niveis - 1) {
+                    p.os_x = pos_x + largura_longarina_3pallets;
+                }
+            }
+            matriz_rua.push(predio);
+        }
+        */
+  // repetir_comprimento++;
 }
-//repetir_comprimento = 0;
-//pos_z = -1.35;
+// repetir_comprimento = 0;
+// pos_z = -1.35;
 
 /*
     gerar_longarina_3pallets_chao(cena, 0, 0);
@@ -136,122 +153,146 @@ function gerar_prédios(
         0.1,
         0xff4500,
         pos_x,
-        pos_y,  
+        pos_y,
         pos_z
-    );*/
+    ); */
 
-//var m = new THREE.Mesh(merge_geometry);
-//cena.add(m);
-//console.log(matriz_rua);
-//}
+// var m = new THREE.Mesh(merge_geometry);
+// cena.add(m);
+// console.log(matriz_rua);
+// }
 
-//ANCHOR gerar longarina de 2 pallets
-function gerar_longarina_2pallets(cena, posição_x, posição_y, posição_z) {
-    loader.load(
-        "../../Projeto_ThreeJS/Modelagens/Longarina_junto_2pallets_256px.gltf",
-        (modelo) => {
-            modelo.scene.position.x = posição_x;
-            modelo.scene.position.y = posição_y;
-            modelo.scene.position.z = posição_z;
-            modelo.scene.frustumCulled = true;
-            //modelo.scene.children[0].castShadow = true;
-            //modelo.scene.children[0].receiveShadow = true;
-            //modelo.scene.receiveShadow = true;
+// ANCHOR gerar longarina de 2 pallets
+function gerar_longarina_2pallets_19m(cena, posição_x, posição_y, posição_z) {
+  loader.load(
+    "../../Projeto_ThreeJS/Modelagens/Longarina_junto_2pallets_256px.gltf",
+    (modelo) => {
+      modelo.scene.position.x = posição_x;
+      modelo.scene.position.y = posição_y;
+      modelo.scene.position.z = posição_z;
+      modelo.scene.frustumCulled = true;
+      // modelo.scene.children[0].castShadow = true;
+      // modelo.scene.children[0].receiveShadow = true;
+      // modelo.scene.receiveShadow = true;
 
-            cena.add(modelo.scene); //cena.add(modelo.scene);
+      cena.add(modelo.scene); // cena.add(modelo.scene);
 
-            modelo.scene.traverse((mdl) => {
-                if (mdl.isMesh) {
-                    mdl.castShadow = true;
-                    mdl.receiveShadow = true;
-                }
-            });
-        },
-        undefined,
-        (erro) => {
-            console.log(erro);
+      modelo.scene.traverse((mdl) => {
+        if (mdl.isMesh) {
+          mdl.castShadow = true;
+          mdl.receiveShadow = true;
         }
-    );
+      });
+    },
+    undefined,
+    (erro) => {
+      console.log(erro);
+    }
+  );
+}
+function gerar_longarina_2pallets_1m(cena, posição_x, posição_y, posição_z) {
+  loader.load(
+    "../../Projeto_ThreeJS/Modelagens/Longarina_Junto_2pallets_256px_1m.glb",
+    (model) => {
+      modelo.scene.position.x = posição_x;
+      modelo.scene.position.y = posição_y;
+      modelo.scene.position.z = posição_z;
+      modelo.scene.frustumCulled = true;
+
+      cena.add(modelo.scene);
+
+      modelo.scene.traverse((mdl) => {
+        if (mdl.isMesh) {
+          mdl.castShadow = true;
+          mdl.receiveShadow = true;
+        }
+      });
+    },
+    undefined,
+    (erro) => {
+      console.log(erro);
+    }
+  );
 }
 
-//ANCHOR gerar longarina de 3 pallets
+// ANCHOR gerar longarina de 3 pallets
 function gerar_longarina_3pallets(cena, posição_x, posição_y) {
-    loader.load(
-        "../../Projeto_ThreeJS/Modelagens/Longarina_Separado_3pallets_pronto.glb",
-        (modelo) => {
-            modelo.scene.position.x = posição_x;
-            modelo.scene.position.y = posição_y;
-            cena.add(modelo.scene);
-        },
-        undefined,
-        (erro) => {
-            console.log(erro);
-        }
-    );
+  loader.load(
+    "../../Projeto_ThreeJS/Modelagens/Longarina_Separado_3pallets_pronto.glb",
+    (modelo) => {
+      modelo.scene.position.x = posição_x;
+      modelo.scene.position.y = posição_y;
+      cena.add(modelo.scene);
+    },
+    undefined,
+    (erro) => {
+      console.log(erro);
+    }
+  );
 }
-//ANCHOR gerar longarina 2 pallets no chão
+// ANCHOR gerar longarina 2 pallets no chão
 function gerar_longarina_2pallets_chao(cena, posição_x, posição_y, posição_z) {
-    /*
-    mtl_obj.load("../../Projeto_ThreeJS/Modelagens/384_2.mtl", (material) => {
-        material.preload();
+  /*
+          mtl_obj.load("../../Projeto_ThreeJS/Modelagens/384_2.mtl", (material) => {
+              material.preload();
 
-        const ld_obj = new OBJLoader();
+              const ld_obj = new OBJLoader();
 
-        ld_obj.setMaterials(material);
-        ld_obj.load(
-            "../../Projeto_ThreeJS/Modelagens/384_2.obj",
-            (modelo) => {
-                modelo.position.z = posição_z;
-                modelo.position.y = posição_y;
-                modelo.position.x = posição_x;
+              ld_obj.setMaterials(material);
+              ld_obj.load(
+                  "../../Projeto_ThreeJS/Modelagens/384_2.obj",
+                  (modelo) => {
+                      modelo.position.z = posição_z;
+                      modelo.position.y = posição_y;
+                      modelo.position.x = posição_x;
 
-                //modelo.add;
-                cena.add(modelo);
-            },
-            undefined,
-            (erro) => {
-                console.log(erro);
-            }
-        );
-    });
-    */
+                      //modelo.add;
+                      cena.add(modelo);
+                  },
+                  undefined,
+                  (erro) => {
+                      console.log(erro);
+                  }
+              );
+          });
+          */
 
-    loader.load(
-        "../../Projeto_ThreeJS/Modelagens/Longarina_Junto_2pallets_chão_256px.glb",
-        (modelo) => {
-            modelo.scene.position.x = posição_x;
-            modelo.scene.position.y = posição_y;
-            modelo.scene.position.z = posição_z;
-            modelo.scene.receiveShadow = true;
-            modelo.scene.frustumCulled = true;
-            modelo.scene.children[0].castShadow = true;
-            modelo.scene.children[0].receiveShadow = true;
-            //var m = new GeometryReducer(modelo.scene);
-            cena.add(modelo.scene); //cena.add(modelo.scene);
-        },
-        undefined,
-        (erro) => {
-            console.log(erro);
-        }
-    );
+  loader.load(
+    "../../Projeto_ThreeJS/Modelagens/Longarina_Junto_2pallets_chão_256px.glb",
+    (modelo) => {
+      modelo.scene.position.x = posição_x;
+      modelo.scene.position.y = posição_y;
+      modelo.scene.position.z = posição_z;
+      modelo.scene.receiveShadow = true;
+      modelo.scene.frustumCulled = true;
+      modelo.scene.children[0].castShadow = true;
+      modelo.scene.children[0].receiveShadow = true;
+      // var m = new GeometryReducer(modelo.scene);
+      cena.add(modelo.scene); // cena.add(modelo.scene);
+    },
+    undefined,
+    (erro) => {
+      console.log(erro);
+    }
+  );
 }
 
-//ANCHOR gerar longarina 3 pallets no chão
+// ANCHOR gerar longarina 3 pallets no chão
 function gerar_longarina_3pallets_chao(cena, posição_x, posição_z) {
-    loader.load(
-        "../../Projeto_ThreeJS/Modelagens/Longarina_Separado_3pallets_chão_pronto.glb",
-        (modelo) => {
-            modelo.scene.position.x = posição_x;
-            modelo.scene.position.z = posição_z;
-            modelo.scene.autoUpdate = false;
+  loader.load(
+    "../../Projeto_ThreeJS/Modelagens/Longarina_Separado_3pallets_chão_pronto.glb",
+    (modelo) => {
+      modelo.scene.position.x = posição_x;
+      modelo.scene.position.z = posição_z;
+      modelo.scene.autoUpdate = false;
 
-            cena.add(modelo.scene);
-        },
-        undefined,
-        (erro) => {
-            console.log(erro);
-        }
-    );
+      cena.add(modelo.scene);
+    },
+    undefined,
+    (erro) => {
+      console.log(erro);
+    }
+  );
 }
 
 /*
@@ -354,132 +395,429 @@ function base_horizontal(
 */
 // ANCHOR Caixas
 function colocar_caixas(cena, predios, niveis, pos_z) {
-    for (var i = 0; i < predios; i++) {
-        var px = 0;
-        var cubo1 = gerar_cubo(
-            cena,
-            1,
-            1,
-            1.2,
-            0xff0000,
-            i * largura_longarina_2pallets + espaço_pallet_lateral + 0.5 + 0.04,
-            0.15 + 0.5,
-            pos_z - 0.5
-        );
-        //gerar_longarina_2pallets_chao(cena, p, 0, 0);
-        //p += largura_longarina_2pallets;
-    }
-}
-
-//ANCHOR  Rua única
-function rua_unica(cena, niveis, predios, pos_x, pos_y, pos_z) {
-    const n_predios = predios;
-    const n_niveis = niveis;
-    //var predios = n_predios;
-    //var niveis = n_niveis;
-    var repetir_comprimento = 0;
-
-    while (repetir_comprimento < n_predios) {
-        for (var i = 0; i < n_niveis; i++) {
-            let cor = 0xff0000;
-            switch (longarina_base) {
-                case 2:
-                    var long_base = gerar_longarina_2pallets_chao(
-                        cena,
-                        pos_x,
-                        0,
-                        pos_z
-                    );
-
-                    gerar_cubo(
-                        cena,
-                        1,
-                        1,
-                        1.2,
-                        cor,
-                        pos_x + espaço_pallet_lateral + 0.5 + 0.04,
-                        0.15 + 0.5,
-                        pos_z - 0.55
-                    );
-
-                    if (i > 0) {
-                        var long_altura = gerar_longarina_2pallets(
-                            cena,
-                            pos_x,
-                            i * altura_longarina,
-                            pos_z
-                        );
-
-                        gerar_cubo(
-                            cena,
-                            1,
-                            1,
-                            1.2,
-                            cor,
-                            pos_x + espaço_pallet_lateral + 0.5 + 0.04,
-                            i * altura_longarina + 0.25 + 0.5,
-                            pos_z - 0.55
-                        );
-                    }
-                    if (i == niveis - 1) {
-                        pos_x = pos_x + largura_longarina_2pallets;
-                    }
-                    break;
-                case 3:
-                    var long_Base = gerar_longarina_3pallets_chao(
-                        cena,
-                        pos_x,
-                        pos_z
-                    );
-
-                    if (i > 0) {
-                        var long_altura = gerar_longarina_3pallets(
-                            cena,
-                            pos_x,
-                            i * altura_longarina
-                        );
-                    }
-
-                    if (i == niveis - 1) {
-                        pos_x = pos_x + largura_longarina_3pallets;
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-        repetir_comprimento++;
-        /*pos_x = 0;
-        pos_y = 0;
-        pos_z = 0;
-        */
-    }
-}
-
-//ANCHOR  Rua Dupla
-function rua_dupla(cena, niveis, predios, pos_x, pos_y, pos_z) {
-    // for (var i = 0; i < 1; i++) {
-    //pos_z -= profundidade_rua_total;
-    rua_unica(
-        cena,
-        niveis,
-        predios,
-        pos_x,
-        pos_y,
-        pos_z - profundidade_longarina
+  for (var i = 0; i < predios; i++) {
+    var px = 0;
+    var cubo1 = gerar_cubo(
+      cena,
+      1,
+      1,
+      1.2,
+      0xff0000,
+      i * largura_longarina_2pallets + espaço_pallet_lateral + 0.5 + 0.04,
+      0.15 + 0.5,
+      pos_z - 0.5
     );
-    //pos_z = pos_z - profundidade_longarina;
-    rua_unica(
-        cena,
-        niveis,
-        predios,
-        pos_x,
-        pos_y,
-        pos_z - profundidade_rua_total
-    );
-    //}
+    // gerar_longarina_2pallets_chao(cena, p, 0, 0);
+    // p += largura_longarina_2pallets;
+  }
 }
 
-export {
-    gerar_prédios
+// ANCHOR  Fileira
+
+var dist_predios = "";
+var rcaixa_ext = 0;
+var verf_long_chao_ext = 0;
+
+var valorRepetirCaixas = {
+  v: 0,
+  set valor(valor) {
+    this.v = valor;
+  },
+  get valor() {
+    return this.v;
+  }
 };
+
+var valorAltura = {
+  v: 0,
+  set valor(valor) {
+    this.v = valor;
+  },
+  get valor() {
+    return this.v;
+  }
+};
+
+// NOTE (valorCaixas) Definir caixas para iteração com json
+var valorCaixas = {
+  v: 0,
+  set valor(valor) {
+    this.v = valor;
+  },
+  get valor() {
+    return this.v;
+  }
+};
+var n_niveis_global = 0;
+var n_predios_global = 0;
+
+const tamanho_longarina = () => {
+  try {
+    var tamanho = 0;
+    let it = 0;
+    let i = 0;
+
+    while (it < 1) {
+      if (json.recordset[i].APTO >= tamanho) {
+        tamanho = json.recordset[i].APTO;
+      } else {
+        it = 1;
+      }
+
+      i++;
+    }
+
+    return tamanho;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+let n_predios = json.recordset[json.recordset.length - 1].PREDIO;
+n_predios_global = Number(n_predios);
+
+if (n_predios % 2 == 0) {
+  dist_predios = "par";
+} else {
+  dist_predios = "impar";
+}
+var n_niveis = json.recordset[0].NIVEL;
+n_predios = n_predios / 2;
+
+let iw = 0;
+let calc_niveis = 0;
+while (iw < 1) {
+  if (json.recordset[calc_niveis + 2].NIVEL < n_niveis) {
+    iw = 1;
+  } else if (json.recordset[calc_niveis + 2].NIVEL > n_niveis) {
+    n_niveis = json.recordset[calc_niveis + 2].NIVEL;
+  }
+  calc_niveis += 2;
+}
+n_niveis_global = Number(n_niveis);
+// var predios = n_predios;
+// var niveis = n_niveis;
+let repetir_comprimento = 0;
+let t_longarina = Number(tamanho_longarina());
+console.log(Number(t_longarina));
+let verf_long_chao = verf_long_chao_ext;
+
+function Fileira(cena, niveis, predios, pos_x, pos_y, pos_z) {
+  // Altura do pallet para ase de longarina de altura > 0 : 0.27
+  // var json = require('../json/teste2.json')
+  //NOTE Não esquecer de zerar repetir_comprimento
+  repetir_comprimento = 0;
+  /*const tamanho_longarina = () => {
+    try {
+      var tamanho = 0;
+      let it = 0;
+      let i = 0;
+
+      while (it < 1) {
+        if (json.recordset[i].APTO >= tamanho) {
+          tamanho = json.recordset[i].APTO;
+        } else {
+          it = 1;
+        }
+
+        i++;
+      }
+
+      return tamanho;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  let n_predios = json.recordset[json.recordset.length - 1].PREDIO;
+  n_predios_global = Number(n_predios);
+
+  if (n_predios % 2 == 0) {
+    dist_predios = "par";
+  } else {
+    dist_predios = "impar";
+  }
+  var n_niveis = json.recordset[0].NIVEL;
+  n_predios = n_predios / 2;
+
+  let iw = 0;
+  let calc_niveis = 0;
+  while (iw < 1) {
+    if (json.recordset[calc_niveis + 2].NIVEL < n_niveis) {
+      iw = 1;
+    } else if (json.recordset[calc_niveis + 2].NIVEL > n_niveis) {
+      n_niveis = json.recordset[calc_niveis + 2].NIVEL;
+    }
+    calc_niveis += 2;
+  }
+  n_niveis_global = Number(n_niveis);
+  // var predios = n_predios;
+  // var niveis = n_niveis;
+  let repetir_comprimento = 0;
+  let t_longarina = Number(tamanho_longarina());
+  console.log(Number(t_longarina));
+  let verf_long_chao = verf_long_chao_ext;
+  */
+  //Prédios
+  console.log("Entrando fileira : " + valorCaixas.valor);
+
+  while (repetir_comprimento < n_predios) {
+    //var verf_long_chao = 0;
+    var vet_caixas = new Array();
+    var r = 0;
+    //let predio = 1;
+    /*if (repetir_comprimento == n_predios - 1) {
+      --valorCaixas.valor;
+    }*/
+    // Níveis
+    for (var intera = 0; intera < n_niveis; intera++) {
+      //var rcaixa = rcaixa_ext;
+      /*if (intera == n_niveis - 1) {
+        --valorCaixas.valor;
+      }*/
+      const cor = 0xffffff;
+      switch (t_longarina) {
+        case 2:
+          //ANCHOR intera == 0
+          if (intera == 0) {
+            //++valorCaixas.valor;
+            console.log("renderizar chão : " + valorCaixas.valor);
+            if (
+              // TODO O erro está na propriedade NIVEL do objeto em que == null está renderizando, porém
+              // != null , não
+              //json.recordset[repetir_comprimento].PREDIO == intera + 1 &&
+              json.recordset[valorCaixas.valor].NIVEL != null &&
+              json.recordset[valorCaixas.valor + 1].NIVEL != null
+            ) {
+              var long_base = gerar_longarina_2pallets_chao(
+                cena,
+                pos_x,
+                valorAltura.valor,
+                pos_z
+              );
+            }
+            //console.log(rcaixa);
+
+            if (
+              //json.recordset[predio].PREDIO == predio &&
+              json.recordset[valorCaixas.valor].APTO != null
+            ) {
+              var caixa = gerar_cubo(
+                cena,
+                1,
+                1,
+                1.2,
+                cor,
+                pos_x + espaço_pallet_lateral + 0.5 + 0.04,
+                0.15 + 0.5,
+                pos_z - 0.55
+              );
+
+              cena.add(caixa);
+              //vet_caixas[i] = caixa;
+            }
+            //++valorCaixas.valor;
+            //console.log("Valor Caixa : " + valorCaixas.valor);
+
+            if (
+              //json.recordset[predio].PREDIO == predio &&
+              json.recordset[valorCaixas.valor + 1].APTO != null
+            ) {
+              var caixa = gerar_cubo(
+                cena,
+                1,
+                1,
+                1.2,
+                cor,
+                pos_x + espaço_pallet_lateral + 0.5 + 1.17,
+                0.15 + 0.5,
+                pos_z - 0.55
+              );
+
+              cena.add(caixa);
+            }
+            //++valorCaixas.valor;
+            valorCaixas.valor += 2;
+            console.log("Valor Caixa : " + valorCaixas.valor);
+            //++valorCaixas.valor;
+            //console.log("Repetir cx nível 1 : " + valorRepetirCaixas.valor);
+          }
+          console.log("valor caixa entre : " + valorCaixas.valor);
+
+          //ANCHOR  intera > 0
+          if (intera > 0) {
+            console.log("ttt : " + valorCaixas.valor);
+
+            //console.log("Valor caixa > 0 : " + valorCaixas.valor);
+            console.log("vca : " + valorCaixas.valor);
+            var vc = valorCaixas.valor;
+            console.log(vc);
+            /*if (intera == 4) {
+              var long_altura = gerar_longarina_2pallets_1m(
+                cena,
+                pos_x,
+                intera * altura_longarina,
+                pos_z
+              );
+            } else {*/
+            if (
+              //NOTE  (Suspeita) : Quando está chegando no último fica um índice a frente
+
+              json.recordset[valorCaixas.valor].NIVEL != null && //NOTE  Aqui
+              json.recordset[valorCaixas.valor + 1].NIVEL != null
+            ) {
+              //console.log(" renderizar : " + valorCaixas.valor);
+              var long_altura = gerar_longarina_2pallets_19m(
+                cena,
+                pos_x,
+                intera * altura_longarina_19m,
+                pos_z
+              );
+              //valorAltura += altura_longarina
+            }
+
+            //}
+            if (json.recordset[valorCaixas.valor].APTO != null) {
+              var caixa = gerar_cubo(
+                cena,
+                1,
+                1,
+                1.2,
+                cor,
+                pos_x + espaço_pallet_lateral + 0.5 + 0.04,
+                intera * altura_longarina_19m + 0.25 + 0.5,
+                pos_z - 0.55
+              );
+
+              cena.add(caixa);
+            }
+            //Primeira adição para ir na segunda caixa do nível
+
+            //++valorCaixas.valor;
+
+            //console.log("Valor Caixa : " + valorCaixas.valor);
+            /*if (valorCaixas.valor != 2 * n_niveis - 1) {
+              ++valorCaixas.valor;
+            }*/
+
+            if (json.recordset[valorCaixas.valor + 1].APTO != null) {
+              var caixa = gerar_cubo(
+                cena,
+                1,
+                1,
+                1.2,
+                cor,
+                pos_x + espaço_pallet_lateral + 0.5 + 1.17,
+                intera * altura_longarina_19m + 0.25 + 0.5,
+                pos_z - 0.55
+              );
+
+              cena.add(caixa);
+            }
+
+            if (intera < n_niveis) {
+              // Caso não seja o último
+              valorCaixas.valor += 2;
+            } else {
+              //valorCaixas.valor += 2;
+            }
+            //valorCaixas.valor += 2;
+            //++valorCaixas.valor;
+            console.log("Valor Caixa : " + valorCaixas.valor);
+          }
+
+          vet_caixas[intera] = caixa;
+
+          /*if (intera === n_niveis - 1) {
+            //++valorCaixas.valor;
+            console.log("Final de um prédio.");
+
+            pos_x = pos_x + largura_longarina_2pallets;
+          }*/
+          break;
+        case 3:
+          var long_Base = gerar_longarina_3pallets_chao(cena, pos_x, pos_z);
+
+          if (intera > 0) {
+            var long_altura = gerar_longarina_3pallets(
+              cena,
+              pos_x,
+              intera * altura_longarina_19m
+            );
+          }
+
+          if (intera === n_niveis - 1) {
+            pos_x = pos_x + largura_longarina_3pallets;
+          }
+          break;
+        default:
+          break;
+      }
+      //++valorCaixas.valor;
+    }
+    pos_x = pos_x + largura_longarina_2pallets;
+    valorAltura.valor = 0;
+    //predio++;
+    matriz_caixas[repetir_comprimento] = vet_caixas;
+    //rcaixa += 2;
+    //rcaixa_ext = rcaixa;
+    //TODO  O erro é por aqui
+    //const multVerf = 2 * n_niveis;
+    //verf_long_chao += multVerf;
+    //valorRepetirCaixas.valor += multVerf;
+    /*if (valorRepetirCaixas.valor === json.recordset.length) {
+      valorRepetirCaixas.valor = verf_long_chao - 1;
+    }*/
+    console.log("verf long chao : " + verf_long_chao);
+
+    console.log("long chao : " + valorRepetirCaixas.valor);
+    console.log("rcaixa : " + valorCaixas.valor);
+
+    /* pos_x = 0;
+          pos_y = 0;
+          pos_z = 0;
+          */
+    r++;
+    repetir_comprimento++;
+  }
+  console.log("verf long chao : " + verf_long_chao);
+}
+
+console.log("valor caixas em rua dupla : " + valorCaixas.valor);
+// ANCHOR   Rua Dupla
+function rua_dupla(cena, rua, niveis, predios, pos_x, pos_y, pos_z) {
+  // for (var i = 0; i < 1; i++) {
+  // pos_z -= profundidade_rua_total;
+  // Primeira instanciação para obter o dist_predios
+  console.log("Valor de rua recebido por parâmetro : " + rua);
+  // NOTE Rua não está conseguindo obter o valor de rua
+  if (rua == 1) {
+    valorCaixas.valor = 0;
+  } else if (rua > 1) {
+    for (var i = 1; i < rua; i++) {
+      //console.log(n_niveis_global);
+      //console.log(n_predios_global);
+
+      valorCaixas.valor += 2 * n_niveis_global * n_predios_global;
+      console.log("Valor esperado : " + valorCaixas.valor);
+    }
+  } else {
+    console.log("Não existe rua negativa ou zero");
+  }
+  console.log("valor caixas em rua dupla : " + valorCaixas.valor);
+
+  Fileira(cena, niveis, predios, pos_x, pos_y, pos_z - profundidade_longarina);
+  //Decrementa para fazer ir de 0 a 99 em vez de 1 a 100
+  //--valorCaixas.valor;
+  console.log("Valor caixa meia_rua : " + valorCaixas.valor);
+
+  // pos_z = pos_z - profundidade_longarina;
+  Fileira(cena, niveis, predios, pos_x, pos_y, pos_z - profundidade_rua_total);
+
+  //++valorCaixas.valor;
+  console.log("Valor caixa final_rua : " + valorCaixas.valor);
+}
+
+// }
+
+export { gerar_prédios };

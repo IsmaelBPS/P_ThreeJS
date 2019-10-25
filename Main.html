@@ -1,81 +1,76 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <meta charset="utf-8" />
     <title>My first three.js app</title>
     <style>
-        body {
-            margin: 0;
-        }
+      body {
+        margin: 0;
+      }
 
-        canvas {
-            width: 100%;
-            height: 97%;
-        }
+      canvas {
+        width: 100%;
+        height: 97%;
+      }
 
+      .dropbtn {
+        background-color: #4caf50;
+        color: white;
+        padding: 8px;
+        font-size: 12px;
+        border: none;
+      }
 
-        .dropbtn {
-            background-color: #4CAF50;
-            color: white;
-            padding: 8px;
-            font-size: 12px;
-            border: none;
-        }
+      .dropbtn:hover .dropdown-content {
+        display: block;
+      }
 
-        .dropbtn:hover .dropdown-content {
-            display: block;
-        }
+      .dropdown {
+        position: relative;
+        display: inline-block;
+        background-color: black;
+      }
 
-        .dropdown {
-            position: relative;
-            display: inline-block;
-            background-color: black;
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f1f1f1;
+        min-width: 80px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 2;
+      }
 
-        }
+      .dropdown-content a {
+        color: black;
+        padding: 2px 16px;
+        text-decoration: none;
+        font-size: 12px;
+        display: block;
+      }
 
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f1f1f1;
-            min-width: 80px;
-            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-            z-index: 2;
-        }
+      .dropdown-content a:hover {
+        background-color: #ddd;
+      }
 
-        .dropdown-content a {
-            color: black;
-            padding: 2px 16px;
-            text-decoration: none;
-            font-size: 12px;
-            display: block;
-        }
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
 
-        .dropdown-content a:hover {
-            background-color: #ddd;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        .dropdown:hover .dropbtn {
-            background-color: #3e8e41;
-        }
+      .dropdown:hover .dropbtn {
+        background-color: #3e8e41;
+      }
     </style>
-</head>
+  </head>
 
-<body style="background-color: black">
-    <script type="module" src="./Main.js"></script>
+  <body style="background-color: black">
+    <script type="module" src="./Browser.js"></script>
     <div class="dropdown">
-        <button class="dropbtn">Ruas</button>
-        <div class="dropdown-content" id="dropdown">
-            <a href="#" id="r1">Rua 1</a>
-            <a href="#" id="r2">Rua 2</a>
-            <a href="#" id="r3">Rua 3</a>
-        </div>
+      <button class="dropbtn">Ruas</button>
+      <div class="dropdown-content" id="dropdown">
+        <a href="#" id="r1">Rua 1</a>
+        <a href="#" id="r2">Rua 2</a>
+        <a href="#" id="r3">Rua 3</a>
+      </div>
     </div>
-</body>
-
-
+  </body>
 </html>
